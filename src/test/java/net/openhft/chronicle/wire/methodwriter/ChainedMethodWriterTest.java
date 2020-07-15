@@ -5,11 +5,14 @@ import net.openhft.chronicle.bytes.MethodReader;
 import net.openhft.chronicle.core.Mocker;
 import net.openhft.chronicle.wire.TextWire;
 import net.openhft.chronicle.wire.Wire;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class ChainedMethodWriterTest {
+
+    @Ignore("see https://github.com/OpenHFT/Chronicle-Wire/issues/174")
     @Test
     public void toPublisher() {
         Wire wire = new TextWire(Bytes.allocateElasticOnHeap());
@@ -20,6 +23,7 @@ public class ChainedMethodWriterTest {
                         "---\n",
                 wire.bytes().toString());
         StringBuilder sb = new StringBuilder();
+
         MethodReader reader = wire.methodReader(Mocker.intercepting(ToPublisher.class, "", sb::append));
         assertTrue(reader.readOne());
         assertFalse(reader.readOne());
