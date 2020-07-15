@@ -16,7 +16,8 @@ public class ChainedMethodWriterTest {
         ToPublisher toPublisher = wire.methodWriter(ToPublisher.class);
         toPublisher.to(1234).say("hello");
         assertEquals("to: 1234\n" +
-                        "say: Hello",
+                        "say: hello\n" +
+                        "---\n",
                 wire.bytes().toString());
         StringBuilder sb = new StringBuilder();
         MethodReader reader = wire.methodReader(Mocker.intercepting(ToPublisher.class, "", sb::append));

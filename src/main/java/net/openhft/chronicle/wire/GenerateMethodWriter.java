@@ -77,7 +77,7 @@ public class GenerateMethodWriter {
     }
 
     /**
-     * @param interfaces   an interface class
+     * @param interfaces           an interface class
      * @param classLoader
      * @param wireType
      * @param genericEvent
@@ -257,8 +257,8 @@ public class GenerateMethodWriter {
             imports.append(interfaceMethods);
             imports.append("\n}\n");
 
-     //       if (DUMP_CODE)
-                System.out.println(imports);
+            //       if (DUMP_CODE)
+            System.out.println(imports);
 
             return CACHED_COMPILER.loadFromJava(classLoader, packageName + '.' + className, imports.toString());
 
@@ -507,10 +507,10 @@ public class GenerateMethodWriter {
         } else if (dm.getReturnType().isInterface()) {
             String index = methodWritersMap.computeIfAbsent(dm.getReturnType(), k -> "methodWriter" + k.getSimpleName() + "TL");
             result.append("// method return\n");
-
-            result.append(format("%s result = (%s)%s.get();\n", dm.getReturnType().getName(), dm.getReturnType().getName(), index));
+            String aClass = nameForClass(dm.getReturnType());
+            result.append(format("%s result = (%s)%s.get();\n", aClass, aClass, index));
             result.append(format("if ( result == null) {\n" +
-                    "result = out.methodWriter(%s.class);\n %s.set(result);\n }\n", dm.getReturnType().getName(), index));
+                    "result = out.methodWriter(%s.class);\n %s.set(result);\n }\n", aClass, index));
 
             result.append(format("return ((%s)result).documentContext(documentContextTL);\n", SHARED_DOCUMENT_CONTEXT));
         } else if (!dm.getReturnType().isPrimitive()) {
