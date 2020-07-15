@@ -35,6 +35,7 @@ public class ChainedMethodWriterTest {
     }
 
     interface ToPublisher extends To<Publisher> {
-
+        @Override
+        Publisher to(long dest);
     }
 }
