@@ -323,7 +323,8 @@ public class GenerateMethodWriter {
         if (dm.getParameterTypes().length == 0 && dm.isDefault())
             return "";
 
-        if ("writingDocument".contentEquals(dm.getName()) && dm.getReturnType() == DocumentContext.class && dm.getParameterCount() == 0)
+        int parameterCount = dm.getParameterCount();
+        if ("writingDocument".contentEquals(dm.getName()) && dm.getReturnType() == DocumentContext.class && parameterCount == 0)
             return createMethodWritingDocument();
 
         final int len = dm.getParameters().length;
@@ -332,12 +333,12 @@ public class GenerateMethodWriter {
 
         final StringBuilder body = new StringBuilder();
         String methodIDAnotation = "";
-        if (dm.getReturnType() == void.class && "close".equals(dm.getName()) && dm.getParameterCount() == 0) {
+        if (dm.getReturnType() == void.class && "close".equals(dm.getName()) && parameterCount == 0) {
             body.append("if (this.closeable != null){\n this.closeable.close();\n}\n");
         } else {
 
-            if (dm.getParameterCount() == 1 && !dm.getParameters()[0].getType().isPrimitive() && useUpdateInterceptor)
-                body.append("// updateInterceptor\nthis." + UPDATE_INTERCEPTOR + ".update(\"" + dm.getName() + "\", " + dm.getParameters()[0].getName() + ");\n");
+            if (parameterCount >= 1 && Marshallable.class.isAssignableFrom(dm.getParameters()[parameterCount-1].getType()) && useUpdateInterceptor)
+                body.append("// updateInterceptor\nthis." + UPDATE_INTERCEPTOR + ".update(\"" + dm.getName() + "\", " + dm.getParameters()[parameterCount-1].getName() + ");\n");
 
             body.append(format("final " + DOCUMENT_CONTEXT + " dc = " + GENERATE_METHOD_WRITER + ".acquire"
                     + DOCUMENT_CONTEXT + "(%s,this.documentContextTL,this.out);\n", metaData))
@@ -346,7 +347,7 @@ public class GenerateMethodWriter {
             int startJ = 0;
 
             final String eventName;
-            if (dm.getParameterCount() > 0 && dm.getName().equals(genericEvent)) {
+            if (parameterCount > 0 && dm.getName().equals(genericEvent)) {
                 // this is used when we are processing the genericEvent
                 eventName = dm.getParameters()[0].getName();
                 startJ = 1;
@@ -357,11 +358,11 @@ public class GenerateMethodWriter {
             retainsComments(dm, body);
             methodIDAnotation = writeEventNameOrId(dm, body, eventName);
 
-            if (dm.getParameterCount() - startJ == 1) {
+            if (parameterCount - startJ == 1) {
                 addFieldComments(dm, body);
             }
 
-            if (hasMethodWriterListener && dm.getParameterCount() > 0)
+            if (hasMethodWriterListener && parameterCount > 0)
                 createMethodWriterListener(dm, body);
             else if (dm.getParameters().length > 0)
                 writeArrayOfParameters(dm, len, body, startJ);
