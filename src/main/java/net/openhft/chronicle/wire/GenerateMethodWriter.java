@@ -85,9 +85,8 @@ public class GenerateMethodWriter {
      * @return a proxy class from an interface class or null if it can't be created
      */
     @Nullable
-    public static Class newClass(String packageName,
+    public static Class newClass(String fullClassName,
                                  Set<Class> interfaces,
-                                 String className,
                                  ClassLoader classLoader,
                                  final WireType wireType,
                                  final String genericEvent,
@@ -95,6 +94,14 @@ public class GenerateMethodWriter {
                                  boolean metaData,
                                  boolean useMethodId,
                                  final boolean useUpdateInterceptor) {
+        int lastDot = fullClassName.lastIndexOf('.');
+        String packageName = "";
+        String className = fullClassName;;
+
+        if (lastDot != -1) {
+            packageName = fullClassName.substring(0, lastDot);
+            className = fullClassName.substring(lastDot + 1);
+        }
 
         return new GenerateMethodWriter(packageName,
                 interfaces,
@@ -257,7 +264,7 @@ public class GenerateMethodWriter {
             imports.append(interfaceMethods);
             imports.append("\n}\n");
 
-            //       if (DUMP_CODE)
+            //  if (DUMP_CODE)
             System.out.println(imports);
 
             return CACHED_COMPILER.loadFromJava(classLoader, packageName + '.' + className, imports.toString());
@@ -337,8 +344,8 @@ public class GenerateMethodWriter {
             body.append("if (this.closeable != null){\n this.closeable.close();\n}\n");
         } else {
 
-            if (parameterCount >= 1 && Marshallable.class.isAssignableFrom(dm.getParameters()[parameterCount-1].getType()) && useUpdateInterceptor)
-                body.append("// updateInterceptor\nthis." + UPDATE_INTERCEPTOR + ".update(\"" + dm.getName() + "\", " + dm.getParameters()[parameterCount-1].getName() + ");\n");
+            if (parameterCount >= 1 && Marshallable.class.isAssignableFrom(dm.getParameters()[parameterCount - 1].getType()) && useUpdateInterceptor)
+                body.append("// updateInterceptor\nthis." + UPDATE_INTERCEPTOR + ".update(\"" + dm.getName() + "\", " + dm.getParameters()[parameterCount - 1].getName() + ");\n");
 
             body.append(format("final " + DOCUMENT_CONTEXT + " dc = " + GENERATE_METHOD_WRITER + ".acquire"
                     + DOCUMENT_CONTEXT + "(%s,this.documentContextTL,this.out);\n", metaData))

@@ -118,13 +118,18 @@ public class TextMethodTester<T> {
         Wire wire2 = createWire(Bytes.allocateElasticOnHeap());
 
         MethodWriterBuilder<T> methodWriterBuilder = wire2.methodWriterBuilder(outputClass);
-        if (methodWriterListener != null) {
-            MethodWriterInterceptorReturns interceptorReturns = (method, args, invoker) -> {
-                methodWriterListener.onWrite(method.getName(), args);
-                return invoker.apply(method, args);
-            };
-            methodWriterBuilder.methodWriterInterceptorReturns(interceptorReturns);
-        }
+      //  if (methodWriterListener != null) {
+
+            //     MethodWriterInterceptorReturns interceptorReturns = (method, args, invoker) -> {
+            //      methodWriterListener.onWrite(method.getName(), args);
+            //      return invoker.apply(method, args);
+            //  };
+            //   methodWriterBuilder.updateInterceptor(this::updateInterceptor);
+
+        //}
+        if (updateInterceptor != null)
+            methodWriterBuilder.updateInterceptor(updateInterceptor);
+
         if (genericEvent != null) methodWriterBuilder.genericEvent(genericEvent);
 
         T writer0 = methodWriterBuilder.get();
@@ -298,6 +303,13 @@ public class TextMethodTester<T> {
     @Deprecated
     public TextMethodTester<T> methodWriterListener(MethodWriterListener methodWriterListener) {
         this.methodWriterListener = methodWriterListener;
+        return this;
+    }
+
+    private UpdateInterceptor updateInterceptor;
+
+    public TextMethodTester<T> updateInterceptor(UpdateInterceptor updateInterceptor) {
+        this.updateInterceptor = updateInterceptor;
         return this;
     }
 
