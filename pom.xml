@@ -109,9 +109,11 @@
             <artifactId>snakeyaml</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>net.openhft</groupId>
-            <artifactId>chronicle-bytes</artifactId>
+            <artifactId>jlbh</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
