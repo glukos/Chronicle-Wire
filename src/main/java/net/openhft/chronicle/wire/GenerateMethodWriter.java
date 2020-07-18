@@ -270,9 +270,17 @@ public class GenerateMethodWriter {
 
             return CACHED_COMPILER.loadFromJava(classLoader, packageName + '.' + className, imports.toString());
 
+        } catch (Error e) {
+            // this can occur due to a race condition, but rather than synchronizing its access we will ignore the duplicate atempt
+            if (e.getMessage().contains("attempted duplicate class definition")) {
+                try {
+                    return Class.forName(packageName + '.' + className, true, classLoader);
+                } catch (ClassNotFoundException e1) {
+                    throw Jvm.rethrow(e1);
+                }
+            }
+            throw Jvm.rethrow(new ClassNotFoundException(e.getMessage() + '\n' + imports, e));
         } catch (Throwable e) {
-            System.out.println(imports.toString());
-            e.printStackTrace();
             throw Jvm.rethrow(new ClassNotFoundException(e.getMessage() + '\n' + imports, e));
         }
     }
