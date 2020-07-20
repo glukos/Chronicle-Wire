@@ -143,8 +143,8 @@ public class BinaryWireTest extends WireTestCommon {
     @Test
     public void testWrite2() {
         @NotNull Wire wire = createWire();
-        wire.write(() -> "Hello");
-        wire.write(() -> "World");
+        wire.write("Hello");
+        wire.write("World");
         @NotNull String name = "Long field name which is more than 32 characters, Bye";
         wire.write(() -> name);
         checkWire(wire, "[pos: 0, rlim: 67, wlim: 8EiB, cap: 8EiB ] ǁÅHelloÅWorld·5" + name + "‡٠٠٠٠٠٠٠٠",
@@ -163,7 +163,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write();
         wire.write(BWKey.field1);
-        wire.write(() -> "Test");
+        wire.write("Test");
         checkAsText(wire, "\"\": field1: Test: ",
                 "\"\": \"1\": \"2603186\": ",
                 "");
@@ -181,7 +181,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write();
         wire.write(BWKey.field1);
-        wire.write(() -> "Test");
+        wire.write("Test");
         checkAsText(wire, "\"\": field1: Test: ",
                 "\"\": \"1\": \"2603186\": ",
                 "");
@@ -227,7 +227,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().int8((byte) 1);
         wire.write(BWKey.field1).int8((byte) 2);
-        wire.write(() -> "Test").int8((byte) 3);
+        wire.write("Test").int8((byte) 3);
         checkWire(wire, "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 19, wlim: 8EiB, cap: 8EiB ] ǁÀ¤⒈Æfield1¤⒉ÄTest¤⒊‡٠٠٠٠٠٠٠٠",
@@ -284,7 +284,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().int16((short) 1);
         wire.write(BWKey.field1).int16((short) 2);
-        wire.write(() -> "Test").int16((short) 3);
+        wire.write("Test").int16((short) 3);
         checkWire(wire, "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 22, wlim: 8EiB, cap: 8EiB ] ǁÀ¥⒈٠Æfield1¥⒉٠ÄTest¥⒊٠‡٠٠٠٠٠٠٠٠",
@@ -311,7 +311,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().uint8(1);
         wire.write(BWKey.field1).uint8(2);
-        wire.write(() -> "Test").uint8(3);
+        wire.write("Test").uint8(3);
         checkWire(wire, "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 19, wlim: 8EiB, cap: 8EiB ] ǁÀ¡⒈Æfield1¡⒉ÄTest¡⒊‡٠٠٠٠٠٠٠٠",
@@ -338,7 +338,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().uint16(1);
         wire.write(BWKey.field1).uint16(2);
-        wire.write(() -> "Test").uint16(3);
+        wire.write("Test").uint16(3);
         checkWire(wire, "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 22, wlim: 8EiB, cap: 8EiB ] ǁÀ¢⒈٠Æfield1¢⒉٠ÄTest¢⒊٠‡٠٠٠٠٠٠٠٠",
@@ -365,7 +365,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().uint32(1);
         wire.write(BWKey.field1).uint32(2);
-        wire.write(() -> "Test").uint32(3);
+        wire.write("Test").uint32(3);
         checkWire(wire, "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 28, wlim: 8EiB, cap: 8EiB ] ǁÀ£⒈٠٠٠Æfield1£⒉٠٠٠ÄTest£⒊٠٠٠‡٠٠٠٠٠٠٠٠",
@@ -392,7 +392,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().int32(1);
         wire.write(BWKey.field1).int32(2);
-        wire.write(() -> "Test").int32(3);
+        wire.write("Test").int32(3);
         checkWire(wire, "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 28, wlim: 8EiB, cap: 8EiB ] ǁÀ¦⒈٠٠٠Æfield1¦⒉٠٠٠ÄTest¦⒊٠٠٠‡٠٠٠٠٠٠٠٠",
@@ -419,7 +419,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().int64(1);
         wire.write(BWKey.field1).int64(2);
-        wire.write(() -> "Test").int64(3);
+        wire.write("Test").int64(3);
         checkWire(wire, "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 40, wlim: 8EiB, cap: 8EiB ] ǁÀ§⒈٠٠٠٠٠٠٠Æfield1§⒉٠٠٠٠٠٠٠ÄTest§⒊٠٠٠٠٠٠٠‡٠٠٠٠٠٠٠٠",
@@ -467,7 +467,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().float64(1);
         wire.write(BWKey.field1).float64(2);
-        wire.write(() -> "Test").float64(3);
+        wire.write("Test").float64(3);
         checkWire(wire, "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 16, wlim: 8EiB, cap: 8EiB ] ǁÀ⒈Æfield1⒉ÄTest⒊‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 40, wlim: 8EiB, cap: 8EiB ] ǁÀ\\u0091٠٠٠٠٠٠ð?Æfield1\\u0091٠٠٠٠٠٠٠@ÄTest\\u0091٠٠٠٠٠٠⒏@‡٠٠٠٠٠٠٠٠",
@@ -508,7 +508,7 @@ public class BinaryWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().text("Hello");
         wire.write(BWKey.field1).text("world");
-        wire.write(() -> "Test").text(name);
+        wire.write("Test").text(name);
         checkWire(wire, "[pos: 0, rlim: 80, wlim: 8EiB, cap: 8EiB ] ǁÀåHelloÆfield1åworldÄTest¸5" + name + "‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 80, wlim: 8EiB, cap: 8EiB ] ǁÀåHelloÆfield1åworldÄTest¸5" + name + "‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 80, wlim: 8EiB, cap: 8EiB ] ǁÀåHelloÆfield1åworldÄTest¸5" + name + "‡٠٠٠٠٠٠٠٠",
@@ -544,7 +544,7 @@ public class BinaryWireTest extends WireTestCommon {
         wire.write().typePrefix("MyType");
         wire.write(BWKey.field1).typePrefix("AlsoMyType");
         @NotNull String name1 = "com.sun.java.swing.plaf.nimbus.InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneMaximizeButtonWindowNotFocusedState";
-        wire.write(() -> "Test").typePrefix(name1);
+        wire.write("Test").typePrefix(name1);
         checkWire(wire, "[pos: 0, rlim: 158, wlim: 8EiB, cap: 8EiB ] ǁÀ¶⒍MyTypeÆfield1¶⒑AlsoMyTypeÄTest¶{" + name1 + "‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 158, wlim: 8EiB, cap: 8EiB ] ǁÀ¶⒍MyTypeÆfield1¶⒑AlsoMyTypeÄTest¶{" + name1 + "‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 158, wlim: 8EiB, cap: 8EiB ] ǁÀ¶⒍MyTypeÆfield1¶⒑AlsoMyTypeÄTest¶{" + name1 + "‡٠٠٠٠٠٠٠٠",
@@ -696,7 +696,7 @@ public class BinaryWireTest extends WireTestCommon {
         mtA.s = (short) 12345;
         mtA.text.append("Hello World");
 
-        wire.write(() -> "A").marshallable(mtA);
+        wire.write("A").marshallable(mtA);
 
         @NotNull MyTypesCustom mtB = new MyTypesCustom();
         mtB.b = false;
@@ -704,7 +704,7 @@ public class BinaryWireTest extends WireTestCommon {
         mtB.i = -123457890;
         mtB.s = (short) 1234;
         mtB.text.append("Bye now");
-        wire.write(() -> "B").marshallable(mtB);
+        wire.write("B").marshallable(mtB);
 
         //        System.out.println(wire.bytes().toDebugString(400));
         checkWire(wire,
@@ -716,10 +716,10 @@ public class BinaryWireTest extends WireTestCommon {
                 "[pos: 0, rlim: 58, wlim: 8EiB, cap: 8EiB ] ǁ\\u0082\\u001A٠٠٠±¥90\\u0094\\u0080\u00ADK٠¦C\\u009ECÿëHello World\\u0082\\u0016٠٠٠°¥Ò⒋\\u0094\\u0087\u00ADK٠¦\\u009E.¤øçBye now‡٠٠٠٠٠٠٠٠",
                 "[pos: 0, rlim: 84, wlim: 8EiB, cap: 8EiB ] ǁ\\u0082'٠٠٠±¥90\\u0091w¾\\u009F\\u001A/Ý^@§٠٠٠٠٠٠٠٠¦C\\u009ECÿëHello World\\u0082#٠٠٠°¥Ò⒋\\u0091S⒌£\\u0092:Ý^@§٠٠٠٠٠٠٠٠¦\\u009E.¤øçBye now‡٠٠٠٠٠٠٠٠");
         @NotNull MyTypesCustom mt2 = new MyTypesCustom();
-        wire.read(() -> "A").marshallable(mt2);
+        wire.read("A").marshallable(mt2);
         assertEquals(mt2, mtA);
 
-        wire.read(() -> "B").marshallable(mt2);
+        wire.read("B").marshallable(mt2);
         assertEquals(mt2, mtB);
     }
 
@@ -753,10 +753,10 @@ public class BinaryWireTest extends WireTestCommon {
             }
             wire.clear();
             @NotNull String s = new String(chars);
-            wire.writeDocument(false, w -> w.write(() -> "message").text(s));
+            wire.writeDocument(false, w -> w.write("message").text(s));
 
 //            System.out.println(Wires.fromSizePrefixedBlobs(wire.bytes()));
-            wire.readDocument(null, w -> w.read(() -> "message").text(s, Assert::assertEquals));
+            wire.readDocument(null, w -> w.read("message").text(s, Assert::assertEquals));
         }
     }
 

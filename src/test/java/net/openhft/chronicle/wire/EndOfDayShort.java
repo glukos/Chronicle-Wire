@@ -27,10 +27,10 @@ public class EndOfDayShort extends SelfDescribingMarshallable implements Seriali
 
     @Override
     public void writeMarshallable(WireOut wire) {
-        wire.write(() -> "name").text(name)
-                .write(() -> "price").float64(closingPrice)
-                .write(() -> "change").float64(change)
-                .write(() -> "changePercent").float64(changePercent)
-                .write(() -> "daysVolume").int64(daysVolume);
+        wire.write("name").text(name)
+                .write("price").float64(closingPrice)
+                .write("change").float64(change)
+                .write("changePercent").float64(changePercent)
+                .write("daysVolume").int64(daysVolume);
     }
 }

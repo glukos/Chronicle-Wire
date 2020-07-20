@@ -55,7 +55,7 @@ public class InnerMapTest extends WireTestCommon {
         }
 
         try (DocumentContext dc = w.readingDocument()) {
-            @Nullable MyMarshable tm = dc.wire().read(() -> "marshable").typedMarshallable();
+            @Nullable MyMarshable tm = dc.wire().read("marshable").typedMarshallable();
             Assert.assertEquals(asString, tm.toString());
         }
 

@@ -1723,8 +1723,8 @@ public class YamlWire extends AbstractWire implements Wire {
             }
             typePrefix(SEQ_MAP);
             map.forEach((k, v) -> sequence(w -> w.marshallable(m -> m
-                    .write(() -> "key").typedMarshallable(k)
-                    .write(() -> "value").typedMarshallable(v))));
+                    .write("key").typedMarshallable(k)
+                    .write("value").typedMarshallable(v))));
             return wireOut();
         }
 
@@ -2561,9 +2561,9 @@ public class YamlWire extends AbstractWire implements Wire {
                     throw new IORuntimeException("Unsupported start of sequence : " + yt.current());
                 do {
                     marshallable(r -> {
-                        @Nullable final K k = r.read(() -> "key")
+                        @Nullable final K k = r.read("key")
                                 .object(kClazz);
-                        @Nullable final V v = r.read(() -> "value")
+                        @Nullable final V v = r.read("value")
                                 .object(vClass);
                         usingMap.put(k, v);
                     });
@@ -2587,8 +2587,8 @@ public class YamlWire extends AbstractWire implements Wire {
                     while (hasNext()) {
                         sequence(this, (o, s) -> s.marshallable(r -> {
                             try {
-                                @Nullable final K k = r.read(() -> "key").typedMarshallable();
-                                @Nullable final V v = r.read(() -> "value").typedMarshallable();
+                                @Nullable final K k = r.read("key").typedMarshallable();
+                                @Nullable final V v = r.read("value").typedMarshallable();
                                 usingMap.put(k, v);
                             } catch (Exception e) {
                                 Jvm.warn().on(getClass(), e);

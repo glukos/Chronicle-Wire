@@ -77,7 +77,7 @@ public class TextBinaryWireTest extends WireTestCommon {
         wire.writeDocument(false, w -> w.write("message").text("text"));
 
         try (DocumentContext dc = wire.readingDocument(position)) {
-            assertEquals("text", dc.wire().read(() -> "message").text());
+            assertEquals("text", dc.wire().read("message").text());
         }
         wire.bytes().releaseLast();
     }
@@ -145,10 +145,10 @@ public class TextBinaryWireTest extends WireTestCommon {
                 .write("d").float64(3.0);
 
         @NotNull final ObjIntConsumer<Integer> assertEquals = (expected, actual) -> Assert.assertEquals((long) expected, actual);
-        wire.read(() -> "a").int32(0, assertEquals);
-        wire.read(() -> "b").int32(1, assertEquals);
-        wire.read(() -> "c").int32(2, assertEquals);
-        wire.read(() -> "d").int32(3, assertEquals);
+        wire.read("a").int32(0, assertEquals);
+        wire.read("b").int32(1, assertEquals);
+        wire.read("c").int32(2, assertEquals);
+        wire.read("d").int32(3, assertEquals);
 
         wire.bytes().releaseLast();
     }

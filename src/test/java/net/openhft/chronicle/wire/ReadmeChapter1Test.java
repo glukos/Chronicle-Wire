@@ -58,10 +58,10 @@ Now you can choice which format you are using.  As the wire formats are themselv
 So now you can write to the wire with a simple document.
 ```java
  */
-        wire.write(() -> "message").text("Hello World")
-                .write(() -> "number").int64(1234567890L)
-                .write(() -> "code").asEnum(TimeUnit.SECONDS)
-                .write(() -> "price").float64(10.50);
+        wire.write("message").text("Hello World")
+                .write("number").int64(1234567890L)
+                .write("code").asEnum(TimeUnit.SECONDS)
+                .write("price").float64(10.50);
         System.out.println(bytes);
 /*
 ```
@@ -78,10 +78,10 @@ price: 10.5
 ```java
 */
 // the same code as for text wire
-        wire2.write(() -> "message").text("Hello World")
-                .write(() -> "number").int64(1234567890L)
-                .write(() -> "code").asEnum(TimeUnit.SECONDS)
-                .write(() -> "price").float64(10.50);
+        wire2.write("message").text("Hello World")
+                .write("number").int64(1234567890L)
+                .write("code").asEnum(TimeUnit.SECONDS)
+                .write("price").float64(10.50);
         System.out.println(bytes2.toHexString());
 
 // to obtain the underlying ByteBuffer to write to a Channel
@@ -103,10 +103,10 @@ Using the RawWire strips away all the meta data to reduce the size of the messag
 The down side is that we cannot easily see what the message contains.
 */
         // the same code as for text wire
-        wire3.write(() -> "message").text("Hello World")
-                .write(() -> "number").int64(1234567890L)
-                .write(() -> "code").asEnum(TimeUnit.SECONDS)
-                .write(() -> "price").float64(10.50);
+        wire3.write("message").text("Hello World")
+                .write("number").int64(1234567890L)
+                .write("code").asEnum(TimeUnit.SECONDS)
+                .write("price").float64(10.50);
         System.out.println(bytes3.toHexString());
 /*
 ```
@@ -192,11 +192,11 @@ Data{message='Hello World', number=1234567890, timeUnit=NANOSECONDS, price=10.5}
         @NotNull Wire wire = new TextWire(bytes);
 
         @NotNull Data data = new Data("Hello World", 1234567890L, TimeUnit.NANOSECONDS, 10.50);
-        wire.write(() -> "mydata").marshallable(data);
+        wire.write("mydata").marshallable(data);
         System.out.println(bytes);
 
         @NotNull Data data2 = new Data();
-        wire.read(() -> "mydata").marshallable(data2);
+        wire.read("mydata").marshallable(data2);
         System.out.println(data2);
 
 /*
@@ -218,11 +218,11 @@ To write in binary instead
         Bytes<ByteBuffer> bytes2 = Bytes.elasticByteBuffer();
         @NotNull Wire wire2 = new BinaryWire(bytes2);
 
-        wire2.write(() -> "mydata").marshallable(data);
+        wire2.write("mydata").marshallable(data);
         System.out.println(bytes2.toHexString());
 
         @NotNull Data data3 = new Data();
-        wire2.read(() -> "mydata").marshallable(data3);
+        wire2.read("mydata").marshallable(data3);
         System.out.println(data3);
 /*
 ```
@@ -255,10 +255,10 @@ Data{message='Hello World', number=1234567890, timeUnit=NANOSECONDS, price=10.5}
         ClassAliasPool.CLASS_ALIASES.addAlias(Data.class);
 
         @NotNull Data data = new Data("Hello World", 1234567890L, TimeUnit.NANOSECONDS, 10.50);
-        wire.write(() -> "mydata").object(data);
+        wire.write("mydata").object(data);
         System.out.println(bytes);
 
-        @Nullable Data data2 = wire.read(() -> "mydata").object(Data.class);
+        @Nullable Data data2 = wire.read("mydata").object(Data.class);
         System.out.println(data2);
 
 /*
@@ -280,10 +280,10 @@ To write in binary instead
         Bytes<ByteBuffer> bytes2 = Bytes.elasticByteBuffer();
         @NotNull Wire wire2 = new BinaryWire(bytes2);
 
-        wire2.write(() -> "mydata").object(data);
+        wire2.write("mydata").object(data);
         System.out.println(bytes2.toHexString());
 
-        @Nullable Data data3 = wire2.read(() -> "mydata").object(Data.class);
+        @Nullable Data data3 = wire2.read("mydata").object(Data.class);
         System.out.println(data3);
 /*
 ```
@@ -391,12 +391,12 @@ Data{message='Hello World', number=1234567890, timeUnit=NANOSECONDS, price=10.5}
                 new Data("G'Day All", 1212121, TimeUnit.MINUTES, 12.34),
                 new Data("Howyall", 1234567890L, TimeUnit.SECONDS, 1000)
         };
-        wire.writeDocument(false, w -> w.write(() -> "mydata")
+        wire.writeDocument(false, w -> w.write("mydata")
                 .sequence(v -> Stream.of(data).forEach(v::object)));
         System.out.println(Wires.fromSizePrefixedBlobs(bytes));
 
         @NotNull List<Data> dataList = new ArrayList<>();
-        assertTrue(wire.readDocument(null, w -> w.read(() -> "mydata")
+        assertTrue(wire.readDocument(null, w -> w.read("mydata")
                 .sequence(dataList, (l, v) -> {
                     while (v.hasNextSequenceItem())
                         l.add(v.object(Data.class));
@@ -439,12 +439,12 @@ To write in binary instead
         Bytes<ByteBuffer> bytes2 = Bytes.elasticByteBuffer();
         @NotNull Wire wire2 = new BinaryWire(bytes2);
         assert wire2.startUse();
-        wire2.writeDocument(false, w -> w.write(() -> "mydata")
+        wire2.writeDocument(false, w -> w.write("mydata")
                 .sequence(v -> Stream.of(data).forEach(v::object)));
         System.out.println(Wires.fromSizePrefixedBlobs(bytes2));
 
         @NotNull List<Data> dataList2 = new ArrayList<>();
-        assertTrue(wire2.readDocument(null, w -> w.read(() -> "mydata")
+        assertTrue(wire2.readDocument(null, w -> w.read("mydata")
                 .sequence(dataList2, (l, v) -> {
                     while (v.hasNextSequenceItem())
                         l.add(v.object(Data.class));

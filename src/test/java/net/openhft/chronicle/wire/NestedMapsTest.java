@@ -163,7 +163,7 @@ public class NestedMapsTest extends WireTestCommon {
                 break;
         }
         @NotNull Mapped m2 = new Mapped();
-        assertTrue(wire.readDocument(null, w -> w.read(() -> "mapped")
+        assertTrue(wire.readDocument(null, w -> w.read("mapped")
                 .marshallable(m2)));
         assertEquals(m, m2);
 

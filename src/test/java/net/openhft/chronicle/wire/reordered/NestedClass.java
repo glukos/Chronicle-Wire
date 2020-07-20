@@ -32,21 +32,21 @@ public class NestedClass implements Marshallable {
 
     @Override
     public void readMarshallable(@NotNull WireIn wire) throws IORuntimeException {
-        wire.read(() -> "text").text(this, (t, v) -> t.text = v)
-                .read(() -> "text2").text(this, (t, v) -> t.text2 = v)
-                .read(() -> "number").float64(this, (t, v) -> t.number = v)
-                .read(() -> "number2").float64(this, (t, v) -> t.number2 = v)
-                .read(() -> "number4").float64(this, (t, v) -> t.number4 = v);
+        wire.read("text").text(this, (t, v) -> t.text = v)
+                .read("text2").text(this, (t, v) -> t.text2 = v)
+                .read("number").float64(this, (t, v) -> t.number = v)
+                .read("number2").float64(this, (t, v) -> t.number2 = v)
+                .read("number4").float64(this, (t, v) -> t.number4 = v);
     }
 
     @Override
     public void writeMarshallable(@NotNull WireOut wire) {
         // write version has 2 extra fields but is missing two fields
-        wire.write(() -> "text").text(text)
-                .write(() -> "text3").text("is text3")
-                .write(() -> "number4").float64(number4)
-                .write(() -> "number").float64(number)
-                .write(() -> "number3").float64(333.3);
+        wire.write("text").text(text)
+                .write("text3").text("is text3")
+                .write("number4").float64(number4)
+                .write("number").float64(number)
+                .write("number3").float64(333.3);
     }
 
     public void setTextNumber(String text, double number) {

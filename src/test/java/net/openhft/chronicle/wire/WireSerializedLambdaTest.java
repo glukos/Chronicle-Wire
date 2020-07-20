@@ -57,9 +57,9 @@ public class WireSerializedLambdaTest extends WireTestCommon {
         @NotNull Wire wire = new TextWire(Bytes.elasticByteBuffer());
         SerializableFunction<String, String> fun = String::toUpperCase;
 
-        wire.write(() -> "one").object(fun)
-                .write(() -> "two").object(Fun.ADD_A)
-                .write(() -> "three").object(Update.INCR);
+        wire.write("one").object(fun)
+                .write("two").object(Fun.ADD_A)
+                .write("three").object(Update.INCR);
 
         System.out.println(wire.bytes().toString());
 
@@ -78,13 +78,13 @@ public class WireSerializedLambdaTest extends WireTestCommon {
                 "two: !Fun ADD_A\n" +
                 "three: !Update INCR\n", wire.bytes().toString());
 
-        @Nullable Function<String, String> function = wire.read(() -> "one").object(Function.class);
+        @Nullable Function<String, String> function = wire.read("one").object(Function.class);
         assertEquals("HELLO", function.apply("hello"));
 
-        @Nullable Function<String, String> function2 = wire.read(() -> "two").object(Function.class);
+        @Nullable Function<String, String> function2 = wire.read("two").object(Function.class);
         assertEquals("helloA", function2.apply("hello"));
 
-        @Nullable Consumer<AtomicLong> updater = wire.read(() -> "three").object(Consumer.class);
+        @Nullable Consumer<AtomicLong> updater = wire.read("three").object(Consumer.class);
         @NotNull AtomicLong aLong = new AtomicLong();
         updater.accept(aLong);
         assertEquals(1, aLong.get());
@@ -97,9 +97,9 @@ public class WireSerializedLambdaTest extends WireTestCommon {
         @NotNull Wire wire = new BinaryWire(Bytes.elasticByteBuffer());
         assert wire.startUse();
         SerializableFunction<String, String> fun = String::toUpperCase;
-        wire.write(() -> "one").object(fun)
-                .write(() -> "two").object(Fun.ADD_A)
-                .write(() -> "three").object(Update.DECR);
+        wire.write("one").object(fun)
+                .write("two").object(Fun.ADD_A)
+                .write("three").object(Update.DECR);
 
         assertEquals("[pos: 0, rlim: 349, wlim: 8EiB, cap: 8EiB ] ǁ" +
                 "Ãone¶⒗SerializedLambda\\u0082 ⒈٠٠" +
@@ -119,10 +119,10 @@ public class WireSerializedLambdaTest extends WireTestCommon {
         @Nullable Function<String, String> function = wire.read().object(Function.class);
         assertEquals("HELLO", function.apply("hello"));
 
-        @Nullable Function<String, String> function2 = wire.read(() -> "two").object(Function.class);
+        @Nullable Function<String, String> function2 = wire.read("two").object(Function.class);
         assertEquals("helloA", function2.apply("hello"));
 
-        @Nullable Consumer<AtomicLong> updater = wire.read(() -> "three").object(Consumer.class);
+        @Nullable Consumer<AtomicLong> updater = wire.read("three").object(Consumer.class);
         @NotNull AtomicLong aLong = new AtomicLong();
         updater.accept(aLong);
         assertEquals(-1, aLong.get());

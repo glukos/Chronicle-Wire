@@ -34,11 +34,11 @@ public class StreamMain {
             @SuppressWarnings("rawtypes")
             @NotNull Bytes b = Bytes.allocateElasticDirect();
             Wire w = wt.apply(b);
-            w.writeDocument(true, w2 -> w2.write(() -> "header")
+            w.writeDocument(true, w2 -> w2.write("header")
                     .typedMarshallable(new FileFormat()));
-            w.writeDocument(false, w2 -> w2.write(() -> "data")
-                    .typedMarshallable("MyData", w3 -> w3.write(() -> "field1").int32(1)
-                            .write(() -> "feild2").int32(2)));
+            w.writeDocument(false, w2 -> w2.write("data")
+                    .typedMarshallable("MyData", w3 -> w3.write("field1").int32(1)
+                            .write("feild2").int32(2)));
             boolean isText = b.readByte(4) >= ' ';
             System.out.println("### " + wt + " Format");
             System.out.println("```" + (isText ? "yaml" : ""));
@@ -57,20 +57,20 @@ class FileFormat extends SelfDescribingMarshallable {
 
     @Override
     public void readMarshallable(WireIn wire) throws IllegalStateException {
-        wire.read(() -> "version").int32(this, (o, s) -> o.version = s)
-                .read(() -> "createdTime").zonedDateTime(this, (o, z) -> o.createdTime = z)
-                .read(() -> "creator").text(this, (o, s) -> o.creator = s)
-                .read(() -> "identity").uuid(this, (o, u) -> o.identity = u)
-                .read(() -> "wireType").object(WireType.class, this, (o, wt) -> o.wireType = wt);
+        wire.read("version").int32(this, (o, s) -> o.version = s)
+                .read("createdTime").zonedDateTime(this, (o, z) -> o.createdTime = z)
+                .read("creator").text(this, (o, s) -> o.creator = s)
+                .read("identity").uuid(this, (o, u) -> o.identity = u)
+                .read("wireType").object(WireType.class, this, (o, wt) -> o.wireType = wt);
     }
 
     @Override
     public void writeMarshallable(@NotNull WireOut wire) {
-        wire.write(() -> "version").int32(version)
-                .write(() -> "createdTime").zonedDateTime(createdTime)
-                .write(() -> "creator").text(creator)
-                .write(() -> "identity").uuid(identity)
-                .write(() -> "wireType").object(wireType);
+        wire.write("version").int32(version)
+                .write("createdTime").zonedDateTime(createdTime)
+                .write("creator").text(creator)
+                .write("identity").uuid(identity)
+                .write("wireType").object(wireType);
     }
 }
 

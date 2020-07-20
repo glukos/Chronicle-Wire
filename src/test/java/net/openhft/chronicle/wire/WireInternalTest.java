@@ -34,7 +34,7 @@ public class WireInternalTest extends WireTestCommon {
 
             final Exception exc = new Exception();
 
-            wire.write(() -> "exc").object(exc);
+            wire.write("exc").object(exc);
 
             final Throwable actual = (Throwable) wire.read("exc").object();
             StackTraceElement[] expectedST = exc.getStackTrace();
@@ -53,7 +53,7 @@ public class WireInternalTest extends WireTestCommon {
 
             final Exception exc = new Exception();
 
-            wire.write(() -> "exc").throwable(exc);
+            wire.write("exc").throwable(exc);
 
             final Throwable actual = wire.read("exc").throwable(false);
             StackTraceElement[] expectedST = exc.getStackTrace();
@@ -69,19 +69,19 @@ public class WireInternalTest extends WireTestCommon {
         Bytes bytes = Bytes.elasticByteBuffer();
         @NotNull Wire out = new BinaryWire(bytes);
         out.writeDocument(true, w -> w
-                .write(() -> "csp").text("csp://hello-world")
-                .write(() -> "tid").int64(123456789));
-        out.writeDocument(false, w -> w.write(() -> "reply").marshallable(
-                w2 -> w2.write(() -> "key").int16(1)
-                        .write(() -> "value").text("Hello World")));
-        out.writeDocument(false, w -> w.write(() -> "reply").sequence(
+                .write("csp").text("csp://hello-world")
+                .write("tid").int64(123456789));
+        out.writeDocument(false, w -> w.write("reply").marshallable(
+                w2 -> w2.write("key").int16(1)
+                        .write("value").text("Hello World")));
+        out.writeDocument(false, w -> w.write("reply").sequence(
                 w2 -> {
                     w2.text("key");
                     w2.int16(2);
                     w2.text("value");
                     w2.text("Hello World2");
                 }));
-        out.writeDocument(false, wireOut -> wireOut.writeEventName(() -> "userid").text("peter"));
+        out.writeDocument(false, wireOut -> wireOut.writeEventName("userid").text("peter"));
 
         String actual = Wires.fromSizePrefixedBlobs(bytes);
         assertEquals("--- !!meta-data #binary\n" +

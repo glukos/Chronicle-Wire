@@ -33,8 +33,8 @@ public class ReadAnyWireTest extends WireTestCommon {
     public void testReadAny() {
         final Bytes<ByteBuffer> bytes = Bytes.elasticByteBuffer();
         final Wire wire = TEXT.apply(bytes);
-        wire.write((() -> "hello")).text("world");
-        Assert.assertEquals("world", READ_ANY.apply(bytes).read(() -> "hello").text());
+        wire.write(("hello")).text("world");
+        Assert.assertEquals("world", READ_ANY.apply(bytes).read("hello").text());
         bytes.releaseLast();
     }
 
@@ -42,8 +42,8 @@ public class ReadAnyWireTest extends WireTestCommon {
     public void testCreateReadAnyFirstTextWire() {
         final Bytes<ByteBuffer> bytes = Bytes.elasticByteBuffer();
         @NotNull final String expected = "world";
-        TEXT.apply(bytes).write((() -> "hello")).text(expected);
-        Assert.assertEquals(expected, READ_ANY.apply(bytes).read((() -> "hello")).text());
+        TEXT.apply(bytes).write(("hello")).text(expected);
+        Assert.assertEquals(expected, READ_ANY.apply(bytes).read(("hello")).text());
         bytes.releaseLast();
     }
 
@@ -51,8 +51,8 @@ public class ReadAnyWireTest extends WireTestCommon {
     public void testCreateReadAnyFirstBinaryWire() {
         final Bytes<ByteBuffer> bytes = Bytes.elasticByteBuffer();
         @NotNull final String expected = "world";
-        BINARY.apply(bytes).write((() -> "hello")).text(expected);
-        Assert.assertEquals(expected, READ_ANY.apply(bytes).read((() -> "hello")).text());
+        BINARY.apply(bytes).write(("hello")).text(expected);
+        Assert.assertEquals(expected, READ_ANY.apply(bytes).read(("hello")).text());
         bytes.releaseLast();
     }
 
@@ -60,8 +60,8 @@ public class ReadAnyWireTest extends WireTestCommon {
     public void testCreateReadAnyFirstJSONWire() {
         final Bytes<ByteBuffer> bytes = Bytes.elasticByteBuffer();
         @NotNull final String expected = "world";
-        JSON.apply(bytes).write((() -> "hello")).text(expected);
-        Assert.assertEquals(expected, READ_ANY.apply(bytes).read((() -> "hello")).text());
+        JSON.apply(bytes).write(("hello")).text(expected);
+        Assert.assertEquals(expected, READ_ANY.apply(bytes).read(("hello")).text());
         bytes.releaseLast();
     }
 
@@ -70,8 +70,8 @@ public class ReadAnyWireTest extends WireTestCommon {
     public void testCreateReadAnyFirstFIELDLESS_BINARYWire() {
         final Bytes<ByteBuffer> bytes = Bytes.elasticByteBuffer();
         @NotNull final String expected = "world";
-        FIELDLESS_BINARY.apply(bytes).write((() -> "hello")).text(expected);
-        Assert.assertEquals(expected, READ_ANY.apply(bytes).read((() -> "hello")).text());
+        FIELDLESS_BINARY.apply(bytes).write(("hello")).text(expected);
+        Assert.assertEquals(expected, READ_ANY.apply(bytes).read(("hello")).text());
         bytes.releaseLast();
     }
 }

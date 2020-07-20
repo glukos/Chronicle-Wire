@@ -68,16 +68,16 @@ public class WireSerializedLambda implements ReadMarshallable, ReadResolvable {
              */
             valueOut.typePrefix("SerializedLambda");
             valueOut.marshallable(v ->
-                    v.write(() -> "cc").typeLiteral(sl.getCapturingClass().replace('/', '.'))
-                            .write(() -> "fic").text(sl.getFunctionalInterfaceClass())
-                            .write(() -> "fimn").text(sl.getFunctionalInterfaceMethodName())
-                            .write(() -> "fims").text(sl.getFunctionalInterfaceMethodSignature())
-                            .write(() -> "imk").int32(sl.getImplMethodKind())
-                            .write(() -> "ic").text(sl.getImplClass())
-                            .write(() -> "imn").text(sl.getImplMethodName())
-                            .write(() -> "ims").text(sl.getImplMethodSignature())
-                            .write(() -> "imt").text(sl.getInstantiatedMethodType())
-                            .write(() -> "ca").sequence(v2 -> {
+                    v.write("cc").typeLiteral(sl.getCapturingClass().replace('/', '.'))
+                            .write("fic").text(sl.getFunctionalInterfaceClass())
+                            .write("fimn").text(sl.getFunctionalInterfaceMethodName())
+                            .write("fims").text(sl.getFunctionalInterfaceMethodSignature())
+                            .write("imk").int32(sl.getImplMethodKind())
+                            .write("ic").text(sl.getImplClass())
+                            .write("imn").text(sl.getImplMethodName())
+                            .write("ims").text(sl.getImplMethodSignature())
+                            .write("imt").text(sl.getInstantiatedMethodType())
+                            .write("ca").sequence(v2 -> {
                         for (int i = 0; i < sl.getCapturedArgCount(); i++)
                             v2.object(sl.getCapturedArg(i));
                     }));
@@ -90,16 +90,16 @@ public class WireSerializedLambda implements ReadMarshallable, ReadResolvable {
     public void readMarshallable(@NotNull WireIn wire) throws IllegalStateException {
         capturedArgs = new ArrayList<>();
 
-        wire.read(() -> "cc").typeLiteral(this, (o, t) -> o.capturingClass = t)
-                .read(() -> "fic").text(this, (o, s) -> o.functionalInterfaceClass = s)
-                .read(() -> "fimn").text(this, (o, s) -> o.functionalInterfaceMethodName = s)
-                .read(() -> "fims").text(this, (o, s) -> o.functionalInterfaceMethodSignature = s)
-                .read(() -> "imk").int32(this, (o, i) -> o.implMethodKind = i)
-                .read(() -> "ic").text(this, (o, s) -> o.implClass = s)
-                .read(() -> "imn").text(this, (o, s) -> o.implMethodName = s)
-                .read(() -> "ims").text(this, (o, s) -> o.implMethodSignature = s)
-                .read(() -> "imt").text(this, (o, s) -> o.instantiatedMethodType = s)
-                .read(() -> "ca").sequence(this, (o, v) -> {
+        wire.read("cc").typeLiteral(this, (o, t) -> o.capturingClass = t)
+                .read("fic").text(this, (o, s) -> o.functionalInterfaceClass = s)
+                .read("fimn").text(this, (o, s) -> o.functionalInterfaceMethodName = s)
+                .read("fims").text(this, (o, s) -> o.functionalInterfaceMethodSignature = s)
+                .read("imk").int32(this, (o, i) -> o.implMethodKind = i)
+                .read("ic").text(this, (o, s) -> o.implClass = s)
+                .read("imn").text(this, (o, s) -> o.implMethodName = s)
+                .read("ims").text(this, (o, s) -> o.implMethodSignature = s)
+                .read("imt").text(this, (o, s) -> o.instantiatedMethodType = s)
+                .read("ca").sequence(this, (o, v) -> {
             while (v.hasNextSequenceItem())
                 capturedArgs.add(v.object(Object.class));
         });

@@ -31,11 +31,11 @@ class MyMarshallable extends SelfDescribingMarshallable {
 
     @Override
     public void writeMarshallable(@NotNull WireOut wire) {
-        wire.write(() -> "MyField").text(someData);
+        wire.write("MyField").text(someData);
     }
 
     @Override
     public void readMarshallable(@NotNull WireIn wire) throws IllegalStateException {
-        someData = wire.read(() -> "MyField").text();
+        someData = wire.read("MyField").text();
     }
 }

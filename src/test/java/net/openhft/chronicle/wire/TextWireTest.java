@@ -287,46 +287,46 @@ public class TextWireTest extends WireTestCommon {
     public void testSimpleBool() {
         @NotNull Wire wire = createWire();
 
-        wire.write(() -> "F").bool(false);
-        wire.write(() -> "T").bool(true);
+        wire.write("F").bool(false);
+        wire.write("T").bool(true);
         assertEquals("F: false\n" +
                 "T: true\n", wire.toString());
         @NotNull String expected = "{F=false, T=true}";
         expectWithSnakeYaml(expected, wire);
 
-        assertFalse(wire.read(() -> "F").bool());
-        assertTrue(wire.read(() -> "T").bool());
+        assertFalse(wire.read("F").bool());
+        assertTrue(wire.read("T").bool());
     }
 
     @Test
     public void testFailingBool() {
         @NotNull Wire wire = createWire();
 
-        wire.write(() -> "A").text("");
-        wire.write(() -> "B").text("other");
+        wire.write("A").text("");
+        wire.write("B").text("other");
         assertEquals("A: \"\"\n" +
                 "B: other\n", wire.toString());
         @NotNull String expected = "{A=, B=other}";
         expectWithSnakeYaml(expected, wire);
 
-        assertFalse(wire.read(() -> "A").bool());
-        assertFalse(wire.read(() -> "B").bool());
+        assertFalse(wire.read("A").bool());
+        assertFalse(wire.read("B").bool());
     }
 
     @Test
     public void testFailingBoolean() {
         @NotNull Wire wire = createWire();
 
-        wire.write(() -> "A").text("");
-        wire.write(() -> "B").text("other");
+        wire.write("A").text("");
+        wire.write("B").text("other");
         assertEquals("A: \"\"\n" +
                 "B: other\n", wire.toString());
         @NotNull String expected = "{A=, B=other}";
         expectWithSnakeYaml(expected, wire);
 
         // TODO fix.
-//        assertEquals(null, wire.read(() -> "A").object(Boolean.class));
-        assertEquals(false, wire.read(() -> "B").object(Boolean.class));
+//        assertEquals(null, wire.read("A").object(Boolean.class));
+        assertEquals(false, wire.read("B").object(Boolean.class));
     }
 
     @Test
@@ -353,44 +353,44 @@ public class TextWireTest extends WireTestCommon {
     public void testInt64() {
         @NotNull Wire wire = createWire();
         long expected = 1234567890123456789L;
-        wire.write(() -> "VALUE").int64(expected);
+        wire.write("VALUE").int64(expected);
         expectWithSnakeYaml("{VALUE=1234567890123456789}", wire);
-        assertEquals(expected, wire.read(() -> "VALUE").int64());
+        assertEquals(expected, wire.read("VALUE").int64());
     }
 
     @Test
     public void testInt16() {
         @NotNull Wire wire = createWire();
         short expected = 12345;
-        wire.write(() -> "VALUE").int64(expected);
+        wire.write("VALUE").int64(expected);
         expectWithSnakeYaml("{VALUE=12345}", wire);
-        assertEquals(expected, wire.read(() -> "VALUE").int16());
+        assertEquals(expected, wire.read("VALUE").int16());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testInt16TooLarge() {
         @NotNull Wire wire = createWire();
-        wire.write(() -> "VALUE").int64(Long.MAX_VALUE);
-        wire.read(() -> "VALUE").int16();
+        wire.write("VALUE").int64(Long.MAX_VALUE);
+        wire.read("VALUE").int16();
     }
 
     @Test
     public void testInt32() {
         @NotNull Wire wire = createWire();
         int expected = 1;
-        wire.write(() -> "VALUE").int64(expected);
-        wire.write(() -> "VALUE2").int64(expected);
+        wire.write("VALUE").int64(expected);
+        wire.write("VALUE2").int64(expected);
         expectWithSnakeYaml("{VALUE=1, VALUE2=1}", wire);
 //        System.out.println("out" + Bytes.toHexString(wire.bytes()));
-        assertEquals(expected, wire.read(() -> "VALUE").int16());
-        assertEquals(expected, wire.read(() -> "VALUE2").int16());
+        assertEquals(expected, wire.read("VALUE").int16());
+        assertEquals(expected, wire.read("VALUE2").int16());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testInt32TooLarge() {
         @NotNull Wire wire = createWire();
-        wire.write(() -> "VALUE").int64(Integer.MAX_VALUE);
-        wire.read(() -> "VALUE").int16();
+        wire.write("VALUE").int64(Integer.MAX_VALUE);
+        wire.read("VALUE").int16();
     }
 
     @Test
@@ -405,9 +405,9 @@ public class TextWireTest extends WireTestCommon {
     @Test
     public void testWrite2() {
         @NotNull Wire wire = createWire();
-        wire.write(() -> "Hello");
-        wire.write(() -> "World");
-        wire.write(() -> "Long field name which is more than 32 characters, Bye");
+        wire.write("Hello");
+        wire.write("World");
+        wire.write("Long field name which is more than 32 characters, Bye");
         assertEquals("Hello: World: \"Long field name which is more than 32 characters, Bye\": ", wire.toString());
     }
 
@@ -416,7 +416,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write();
         wire.write(BWKey.field1);
-        wire.write(() -> "Test");
+        wire.write("Test");
         wire.read();
         wire.read();
         wire.read();
@@ -430,7 +430,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write();
         wire.write(BWKey.field1);
-        wire.write(() -> "Test");
+        wire.write("Test");
 
         // ok as blank matches anything
         wire.read(BWKey.field1);
@@ -471,7 +471,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().int8(1);
         wire.write(BWKey.field1).int8(2);
-        wire.write(() -> "Test").int8(3);
+        wire.write("Test").int8(3);
         expectWithSnakeYaml("{=1, field1=2, Test=3}", wire);
         assertEquals("\"\": 1\n" +
                 "field1: 2\n" +
@@ -494,7 +494,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().int16(1);
         wire.write(BWKey.field1).int16(2);
-        wire.write(() -> "Test").int16(3);
+        wire.write("Test").int16(3);
         expectWithSnakeYaml("{=1, field1=2, Test=3}", wire);
         assertEquals("\"\": 1\n" +
                 "field1: 2\n" +
@@ -517,7 +517,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().uint8(1);
         wire.write(BWKey.field1).uint8(2);
-        wire.write(() -> "Test").uint8(3);
+        wire.write("Test").uint8(3);
         expectWithSnakeYaml("{=1, field1=2, Test=3}", wire);
         assertEquals("\"\": 1\n" +
                 "field1: 2\n" +
@@ -540,7 +540,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().uint16(1);
         wire.write(BWKey.field1).uint16(2);
-        wire.write(() -> "Test").uint16(3);
+        wire.write("Test").uint16(3);
         expectWithSnakeYaml("{=1, field1=2, Test=3}", wire);
         assertEquals("\"\": 1\n" +
                 "field1: 2\n" +
@@ -563,7 +563,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().uint32(1);
         wire.write(BWKey.field1).uint32(2);
-        wire.write(() -> "Test").uint32(3);
+        wire.write("Test").uint32(3);
         expectWithSnakeYaml("{=1, field1=2, Test=3}", wire);
         assertEquals("\"\": 1\n" +
                 "field1: 2\n" +
@@ -586,7 +586,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().int32(1);
         wire.write(BWKey.field1).int32(2);
-        wire.write(() -> "Test").int32(3);
+        wire.write("Test").int32(3);
         expectWithSnakeYaml("{=1, field1=2, Test=3}", wire);
         assertEquals("\"\": 1\n" +
                 "field1: 2\n" +
@@ -609,7 +609,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().int64(1);
         wire.write(BWKey.field1).int64(2);
-        wire.write(() -> "Test").int64(3);
+        wire.write("Test").int64(3);
         expectWithSnakeYaml("{=1, field1=2, Test=3}", wire);
         assertEquals("\"\": 1\n" +
                 "field1: 2\n" +
@@ -632,7 +632,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write().float64(1);
         wire.write(BWKey.field1).float64(2);
-        wire.write(() -> "Test").float64(3);
+        wire.write("Test").float64(3);
         assertEquals("\"\": 1.0\n" +
                 "field1: 2.0\n" +
                 "Test: 3.0\n", wire.toString());
@@ -664,7 +664,7 @@ public class TextWireTest extends WireTestCommon {
         wire.write(BWKey.field1).text("world");
         @NotNull String name = "Long field name which is more than 32 characters, \\ \nBye";
 
-        wire.write(() -> "Test")
+        wire.write("Test")
                 .text(name);
         expectWithSnakeYaml("{=Hello, field1=world, Test=Long field name which is more than 32 characters, \\ \n" +
                 "Bye}", wire);
@@ -690,7 +690,7 @@ public class TextWireTest extends WireTestCommon {
         wire.write().typePrefix("MyType");
         wire.write(BWKey.field1).typePrefix("AlsoMyType");
         @NotNull String name1 = "com.sun.java.swing.plaf.nimbus.InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneMaximizeButtonWindowNotFocusedState";
-        wire.write(() -> "Test").typePrefix(name1);
+        wire.write("Test").typePrefix(name1);
         wire.writeComment("");
         // TODO fix how types are serialized.
 //        expectWithSnakeYaml(wire, "{=1, field1=2, Test=3}");
@@ -844,7 +844,7 @@ public class TextWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.bytes().append("A: !").append(MyTypes.class.getName()).append("{}");
 
-        @NotNull MyTypes mt = (MyTypes) wire.read(() -> "A").object();
+        @NotNull MyTypes mt = (MyTypes) wire.read("A").object();
         assertEquals("!net.openhft.chronicle.wire.MyTypes {\n" +
                 "  text: \"\",\n" +
                 "  b: false,\n" +
@@ -939,7 +939,7 @@ public class TextWireTest extends WireTestCommon {
         expected.put("hello2", "world2");
 
         wire.writeDocument(false, o -> {
-            o.writeEventName(() -> "example")
+            o.writeEventName("example")
                     .map(expected);
         });
 //        bytes.readPosition(4);
@@ -953,7 +953,7 @@ public class TextWireTest extends WireTestCommon {
                         "}\n",
                 Wires.fromSizePrefixedBlobs(bytes));
         @NotNull final Map<String, String> actual = new LinkedHashMap<>();
-        wire.readDocument(null, c -> c.read(() -> "example").map(actual));
+        wire.readDocument(null, c -> c.read("example").map(actual));
         assertEquals(expected, actual);
     }
 
@@ -986,7 +986,7 @@ public class TextWireTest extends WireTestCommon {
         mtA.s = (short) 12345;
         mtA.text.append("Hello World");
 
-        wire.write(() -> "A").marshallable(mtA);
+        wire.write("A").marshallable(mtA);
 
         @NotNull MyTypesCustom mtB = new MyTypesCustom();
         mtB.b = false;
@@ -994,7 +994,7 @@ public class TextWireTest extends WireTestCommon {
         mtB.i = -123457890;
         mtB.s = (short) 1234;
         mtB.text.append("Bye now");
-        wire.write(() -> "B").marshallable(mtB);
+        wire.write("B").marshallable(mtB);
 
         assertEquals("A: {\n" +
                 "  B_FLAG: true,\n" +
@@ -1016,10 +1016,10 @@ public class TextWireTest extends WireTestCommon {
                 "B={B_FLAG=false, S_NUM=1234, D_NUM=123.4567, L_NUM=0, I_NUM=-123457890, TEXT=Bye now}}", wire);
 
         @NotNull MyTypesCustom mt2 = new MyTypesCustom();
-        wire.read(() -> "A").marshallable(mt2);
+        wire.read("A").marshallable(mt2);
         assertEquals(mt2, mtA);
 
-        wire.read(() -> "B").marshallable(mt2);
+        wire.read("B").marshallable(mt2);
         assertEquals(mt2, mtB);
     }
 
@@ -1032,7 +1032,7 @@ public class TextWireTest extends WireTestCommon {
         mtA.i = -12345789;
         mtA.s = (short) 12345;
 
-        @NotNull ValueOut write = wire.write(() -> "A");
+        @NotNull ValueOut write = wire.write("A");
 
         long start = wire.bytes().writePosition() + 1; // including one space for "sep".
         write.marshallable(mtA);
@@ -1040,7 +1040,7 @@ public class TextWireTest extends WireTestCommon {
 
         expectWithSnakeYaml("{A={B_FLAG=true, S_NUM=12345, D_NUM=123.456, L_NUM=0, I_NUM=-12345789, TEXT=}}", wire);
 
-        @NotNull ValueIn read = wire.read(() -> "A");
+        @NotNull ValueIn read = wire.read("A");
 
         long len = read.readLength();
 
@@ -1061,7 +1061,7 @@ public class TextWireTest extends WireTestCommon {
         expected.put(3, 3);
 
         wire.writeDocument(false, o -> {
-            o.write(() -> "example").map(expected);
+            o.write("example").map(expected);
         });
 
         assertEquals("--- !!data\n" +
@@ -1072,7 +1072,7 @@ public class TextWireTest extends WireTestCommon {
                 "}\n", Wires.fromSizePrefixedBlobs(bytes));
         @NotNull final Map<Integer, Integer> actual = new HashMap<>();
         wire.readDocument(null, c -> {
-            @Nullable Map m = c.read(() -> "example").map(Integer.class, Integer.class, actual);
+            @Nullable Map m = c.read("example").map(Integer.class, Integer.class, actual);
             assertEquals(m, expected);
         });
 
@@ -1124,7 +1124,7 @@ public class TextWireTest extends WireTestCommon {
         expected.put(new MyMarshallable("aKey"), new MyMarshallable("aValue"));
         expected.put(new MyMarshallable("aKey2"), new MyMarshallable("aValue2"));
 
-        wire.writeDocument(false, o -> o.write(() -> "example").marshallable(expected, MyMarshallable.class, MyMarshallable.class, true));
+        wire.writeDocument(false, o -> o.write("example").marshallable(expected, MyMarshallable.class, MyMarshallable.class, true));
 
         assertEquals("--- !!data\n" +
                         "example: {\n" +
@@ -1134,7 +1134,7 @@ public class TextWireTest extends WireTestCommon {
                 Wires.fromSizePrefixedBlobs(bytes));
         @NotNull final Map<MyMarshallable, MyMarshallable> actual = new LinkedHashMap<>();
 
-        wire.readDocument(null, c -> c.read(() -> "example")
+        wire.readDocument(null, c -> c.read("example")
                 .map(
                         MyMarshallable.class,
                         MyMarshallable.class,
@@ -1165,7 +1165,7 @@ public class TextWireTest extends WireTestCommon {
         };
         @NotNull final Bytes bytes = allocateElasticOnHeap();
         @NotNull final Wire wire = new TextWire(bytes);
-        wire.writeDocument(false, w -> w.writeEventName(() -> "exception")
+        wire.writeDocument(false, w -> w.writeEventName("exception")
                 .object(e));
 
         assertEquals("--- !!data\n" +
@@ -1179,7 +1179,7 @@ public class TextWireTest extends WireTestCommon {
                 "}\n", Wires.fromSizePrefixedBlobs(bytes));
 
         wire.readDocument(null, r -> {
-            Throwable t = r.read(() -> "exception").throwable(true);
+            Throwable t = r.read("exception").throwable(true);
             assertTrue(t instanceof InvalidAlgorithmParameterException);
         });
     }
@@ -1396,11 +1396,11 @@ public class TextWireTest extends WireTestCommon {
         results.accept("host4", 4);
         replay(results);
         @NotNull TextWire wire = TextWire.from(s);
-        wire.read(() -> "cluster").marshallable(v -> {
+        wire.read("cluster").marshallable(v -> {
                     @NotNull StringBuilder sb = new StringBuilder();
                     while (wire.hasMore()) {
                         wire.readEventName(sb).marshallable(m -> {
-                            m.read(() -> "hostId").int32(sb.toString(), results);
+                            m.read("hostId").int32(sb.toString(), results);
                         });
                     }
                 }
@@ -1434,9 +1434,9 @@ public class TextWireTest extends WireTestCommon {
             wire.clear();
             Arrays.fill(chars, (char) i);
             @NotNull String s = new String(chars);
-            wire.writeDocument(false, w -> w.write(() -> "message").text(s));
+            wire.writeDocument(false, w -> w.write("message").text(s));
 
-            wire.readDocument(null, w -> w.read(() -> "message").text(s, Assert::assertEquals));
+            wire.readDocument(null, w -> w.read("message").text(s, Assert::assertEquals));
         }
     }
 
@@ -1467,19 +1467,19 @@ public class TextWireTest extends WireTestCommon {
 
         @NotNull final byte[] expected = {-1, -2, -3, -4, -5, -6, -7};
         wire.writeDocument(false, wir -> {
-            ValueOut out = wir.writeEventName(() -> "put");
+            ValueOut out = wir.writeEventName("put");
             out.swapLeaf(true);
-            out.marshallable(w -> w.write(() -> "key")
+            out.marshallable(w -> w.write("key")
                     .text("1")
-                    .write(() -> "value")
+                    .write("value")
                     .object(expected));
         });
         assertEquals("--- !!data\n" +
                 "put: { key: \"1\", value: !byte[] !!binary //79/Pv6+Q== }\n", (Wires.fromSizePrefixedBlobs(wire.bytes())));
 
-        wire.readDocument(null, wir -> wire.read(() -> "put")
-                .marshallable(w -> w.read(() -> "key").object(Object.class, "1", Assert::assertEquals)
-                        .read(() -> "value").object(byte[].class, expected, Assert::assertArrayEquals)));
+        wire.readDocument(null, wir -> wire.read("put")
+                .marshallable(w -> w.read("key").object(Object.class, "1", Assert::assertEquals)
+                        .read("value").object(byte[].class, expected, Assert::assertArrayEquals)));
     }
 
     @Test
@@ -1500,9 +1500,9 @@ public class TextWireTest extends WireTestCommon {
                         "--- !!data\n" +
                         "four: !byte[] !!binary AQIDBA==\n"
                 , Wires.fromSizePrefixedBlobs(wire.bytes()));
-        wire.readDocument(null, w -> assertArrayEquals(new byte[0], (byte[]) w.read(() -> "nothing").object()));
-        wire.readDocument(null, w -> assertArrayEquals(one, (byte[]) w.read(() -> "one").object()));
-        wire.readDocument(null, w -> assertArrayEquals(four, (byte[]) w.read(() -> "four").object()));
+        wire.readDocument(null, w -> assertArrayEquals(new byte[0], (byte[]) w.read("nothing").object()));
+        wire.readDocument(null, w -> assertArrayEquals(one, (byte[]) w.read("one").object()));
+        wire.readDocument(null, w -> assertArrayEquals(four, (byte[]) w.read("four").object()));
     }
 
     @Test
@@ -1991,14 +1991,14 @@ public class TextWireTest extends WireTestCommon {
         public void readMarshallable(@NotNull WireIn wire) {
             if (bytes == null)
                 bytes = BytesStore.nativePointer();
-            wire.read(() -> "bytes").bytesSet((PointerBytesStore) bytes);
-            another = (wire.read(() -> "another").int64());
+            wire.read("bytes").bytesSet((PointerBytesStore) bytes);
+            another = (wire.read("another").int64());
         }
 
         @Override
         public void writeMarshallable(@NotNull WireOut wire) {
-            wire.write(() -> "bytes").bytes(bytes);
-            wire.write(() -> "another").int64(another);
+            wire.write("bytes").bytes(bytes);
+            wire.write("another").int64(another);
         }
     }
 

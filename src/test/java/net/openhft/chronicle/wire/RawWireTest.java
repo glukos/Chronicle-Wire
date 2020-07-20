@@ -80,9 +80,9 @@ public class RawWireTest extends WireTestCommon {
     @Test
     public void testWrite2() {
         @NotNull Wire wire = createWire();
-        wire.write(() -> "Hello");
-        wire.write(() -> "World");
-        wire.write(() -> "Long field name which is more than 32 characters, Bye");
+        wire.write("Hello");
+        wire.write("World");
+        wire.write("Long field name which is more than 32 characters, Bye");
 
         assertEquals("", wire.toString());
     }
@@ -92,7 +92,7 @@ public class RawWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write();
         wire.write(BWKey.field1);
-        wire.write(() -> "Test");
+        wire.write("Test");
 
         wire.read();
         wire.read();
@@ -107,7 +107,7 @@ public class RawWireTest extends WireTestCommon {
         @NotNull Wire wire = createWire();
         wire.write();
         wire.write(BWKey.field1);
-        wire.write(() -> "Test");
+        wire.write("Test");
 
         // ok as blank matches anything
         wire.read(BWKey.field1);
@@ -148,7 +148,7 @@ public class RawWireTest extends WireTestCommon {
         wire.write().int8(1);
         wire.write(BWKey.field1).int8(2);
 
-        wire.write(() -> "Test").int8(3);
+        wire.write("Test").int8(3);
         assertEquals("[pos: 0, rlim: 3, wlim: 8EiB, cap: 8EiB ] ǁ⒈⒉⒊‡٠٠٠٠٠٠٠٠", wire.bytes().toDebugString());
 
         // ok as blank matches anything
@@ -169,7 +169,7 @@ public class RawWireTest extends WireTestCommon {
         wire.write().int16(1);
         wire.write(BWKey.field1).int16(2);
 
-        wire.write(() -> "Test").int16(3);
+        wire.write("Test").int16(3);
         assertEquals("[pos: 0, rlim: 6, wlim: 8EiB, cap: 8EiB ] ǁ⒈٠⒉٠⒊٠‡٠٠٠٠٠٠٠٠", wire.bytes().toDebugString());
 
         // ok as blank matches anything
@@ -190,7 +190,7 @@ public class RawWireTest extends WireTestCommon {
         wire.write().uint8(1);
         wire.write(BWKey.field1).uint8(2);
 
-        wire.write(() -> "Test").uint8(3);
+        wire.write("Test").uint8(3);
         assertEquals("[pos: 0, rlim: 3, wlim: 8EiB, cap: 8EiB ] ǁ⒈⒉⒊‡٠٠٠٠٠٠٠٠", wire.bytes().toDebugString());
 
         // ok as blank matches anything
@@ -211,7 +211,7 @@ public class RawWireTest extends WireTestCommon {
         wire.write().uint16(1);
         wire.write(BWKey.field1).uint16(2);
 
-        wire.write(() -> "Test").uint16(3);
+        wire.write("Test").uint16(3);
         @NotNull String actual = wire.bytes().toDebugString();
         assertEquals("[pos: 0, rlim: 6, wlim: 8EiB, cap: 8EiB ] ǁ⒈٠⒉٠⒊٠‡٠٠٠٠٠٠٠٠", actual);
 
@@ -233,7 +233,7 @@ public class RawWireTest extends WireTestCommon {
         wire.write().uint32(1);
         wire.write(BWKey.field1).uint32(2);
 
-        wire.write(() -> "Test").uint32(3);
+        wire.write("Test").uint32(3);
         assertEquals("[pos: 0, rlim: 12, wlim: 8EiB, cap: 8EiB ] ǁ⒈٠٠٠⒉٠٠٠⒊٠٠٠‡٠٠٠٠٠٠٠٠", wire.bytes().toDebugString());
 
         // ok as blank matches anything
@@ -254,7 +254,7 @@ public class RawWireTest extends WireTestCommon {
         wire.write().int32(1);
         wire.write(BWKey.field1).int32(2);
 
-        wire.write(() -> "Test").int32(3);
+        wire.write("Test").int32(3);
         assertEquals("[pos: 0, rlim: 12, wlim: 8EiB, cap: 8EiB ] ǁ⒈٠٠٠⒉٠٠٠⒊٠٠٠‡٠٠٠٠٠٠٠٠", wire.bytes().toDebugString());
 
         // ok as blank matches anything
@@ -275,7 +275,7 @@ public class RawWireTest extends WireTestCommon {
         wire.write().int64(1);
         wire.write(BWKey.field1).int64(2);
 
-        wire.write(() -> "Test").int64(3);
+        wire.write("Test").int64(3);
         assertEquals("[pos: 0, rlim: 24, wlim: 8EiB, cap: 8EiB ] ǁ⒈٠٠٠٠٠٠٠⒉٠٠٠٠٠٠٠⒊٠٠٠٠٠٠٠‡٠٠٠٠٠٠٠٠", wire.bytes().toDebugString());
 
         // ok as blank matches anything
@@ -298,7 +298,7 @@ public class RawWireTest extends WireTestCommon {
         wire.write().float64(1);
         wire.write(BWKey.field1).float64(2);
 
-        wire.write(() -> "Test").float64(3);
+        wire.write("Test").float64(3);
         assertEquals("[pos: 0, rlim: 24, wlim: 8EiB, cap: 8EiB ] ǁ٠٠٠٠٠٠ð?٠٠٠٠٠٠٠@٠٠٠٠٠٠⒏@‡٠٠٠٠٠٠٠٠", wire.bytes().toDebugString());
 
         // ok as blank matches anything
@@ -327,7 +327,7 @@ public class RawWireTest extends WireTestCommon {
         wire.write(BWKey.field1).text("world");
         @NotNull String name1 = "Long field name which is more than 32 characters, \\ \nBye";
 
-        wire.write(() -> "Test")
+        wire.write("Test")
                 .text(name1);
         @NotNull String actual = wire.bytes().toDebugString();
         assertEquals("[pos: 0, rlim: 69, wlim: 8EiB, cap: 8EiB ] ǁ⒌Hello⒌world8Long field name which is more than 32 characters, \\ ⒑Bye‡٠٠٠٠٠٠٠٠", actual);
@@ -351,7 +351,7 @@ public class RawWireTest extends WireTestCommon {
         wire.write(BWKey.field1).typePrefix("AlsoMyType");
         @NotNull String name1 = "com.sun.java.swing.plaf.nimbus.InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneMaximizeButtonWindowNotFocusedState";
 
-        wire.write(() -> "Test").typePrefix(name1);
+        wire.write("Test").typePrefix(name1);
         wire.writeComment("");
         assertEquals("[pos: 0, rlim: 142, wlim: 8EiB, cap: 8EiB ] ǁ⒍MyType⒑AlsoMyType{" + name1 + "‡٠٠٠٠٠٠٠٠", wire.bytes().toDebugString());
 
@@ -470,7 +470,7 @@ public class RawWireTest extends WireTestCommon {
         mtA.s = ((short) 12345);
         mtA.text.append("Hello World");
 
-        wire.writeEventName(() -> "A").marshallable(mtA);
+        wire.writeEventName("A").marshallable(mtA);
 
         @NotNull MyTypesCustom mtB = new MyTypesCustom();
         mtB.b = (false);
@@ -478,7 +478,7 @@ public class RawWireTest extends WireTestCommon {
         mtB.i = (-123457890);
         mtB.s = ((short) 1234);
         mtB.text.append("Bye now");
-        wire.writeEventName(() -> "B").marshallable(mtB);
+        wire.writeEventName("B").marshallable(mtB);
 
         assertEquals("[pos: 0, rlim: 78, wlim: 8EiB, cap: 8EiB ] ǁ" +
                         "⒈A#٠٠٠±90w¾\\u009F\\u001A/Ý^@٠٠٠٠٠٠٠٠C\\u009ECÿ⒒Hello World" +

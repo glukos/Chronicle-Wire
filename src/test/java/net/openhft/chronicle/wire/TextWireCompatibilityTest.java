@@ -46,7 +46,7 @@ public class TextWireCompatibilityTest extends WireTestCommon {
 
         @Override
         public void writeMarshallable(@NotNull WireOut wire) {
-            wire.write(() -> "a").int32(1);
+            wire.write("a").int32(1);
         }
     }
 
@@ -55,16 +55,16 @@ public class TextWireCompatibilityTest extends WireTestCommon {
         public void readMarshallable(@NotNull WireIn wire) throws IORuntimeException {
             super.readMarshallable(wire);
             Assert.assertEquals(TextWireCompatibilityTest.class, wire.read("b").typeLiteral());
-            Assert.assertNotNull(wire.read(() -> "object").object());
-            Assert.assertNotNull(wire.read(() -> "object2").object());
+            Assert.assertNotNull(wire.read("object").object());
+            Assert.assertNotNull(wire.read("object2").object());
         }
 
         @Override
         public void writeMarshallable(@NotNull WireOut wire) {
             super.writeMarshallable(wire);
-            wire.write(() -> "b").typeLiteral(TextWireCompatibilityTest.class);
-            wire.write(() -> "object").object(new SimpleObject());
-            wire.write(() -> "object2").object(new SimpleObject());
+            wire.write("b").typeLiteral(TextWireCompatibilityTest.class);
+            wire.write("object").object(new SimpleObject());
+            wire.write("object2").object(new SimpleObject());
         }
     }
 

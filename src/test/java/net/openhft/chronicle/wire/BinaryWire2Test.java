@@ -381,11 +381,11 @@ public class BinaryWire2Test extends WireTestCommon {
                 "  value: world2\n" +
                 "}\n", Wires.fromSizePrefixedBlobs(wire.bytes()));
 
-        wire.readDocument(null, w -> w.read(() -> "data").typePrefix(this, (o, t) -> assertEquals("!UpdateEvent", t.toString())).marshallable(
-                m -> m.read(() -> "assetName").object(String.class, "/name", Assert::assertEquals)
-                        .read(() -> "key").object(String.class, "test", Assert::assertEquals)
-                        .read(() -> "oldValue").object(String.class, "world1", Assert::assertEquals)
-                        .read(() -> "value").object(String.class, "world2", Assert::assertEquals)));
+        wire.readDocument(null, w -> w.read("data").typePrefix(this, (o, t) -> assertEquals("!UpdateEvent", t.toString())).marshallable(
+                m -> m.read("assetName").object(String.class, "/name", Assert::assertEquals)
+                        .read("key").object(String.class, "test", Assert::assertEquals)
+                        .read("oldValue").object(String.class, "world1", Assert::assertEquals)
+                        .read("value").object(String.class, "world2", Assert::assertEquals)));
     }
 
     @Test
@@ -405,11 +405,11 @@ public class BinaryWire2Test extends WireTestCommon {
                 "  value: world2\n" +
                 "}\n", Wires.fromSizePrefixedBlobs(wire.bytes()));
 
-        wire.readDocument(null, w -> w.read(() -> "data").typePrefix(this, (o, t) -> assertEquals("!UpdateEvent", t.toString())).marshallable(
-                m -> m.read(() -> "assetName").object(String.class, "/name", Assert::assertEquals)
-                        .read(() -> "key").object(String.class, "test", Assert::assertEquals)
-                        .read(() -> "oldValue").object(String.class, "error", Assert::assertNull)
-                        .read(() -> "value").object(String.class, "world2", Assert::assertEquals)));
+        wire.readDocument(null, w -> w.read("data").typePrefix(this, (o, t) -> assertEquals("!UpdateEvent", t.toString())).marshallable(
+                m -> m.read("assetName").object(String.class, "/name", Assert::assertEquals)
+                        .read("key").object(String.class, "test", Assert::assertEquals)
+                        .read("oldValue").object(String.class, "error", Assert::assertNull)
+                        .read("value").object(String.class, "world2", Assert::assertEquals)));
     }
 
     @Test
@@ -440,16 +440,16 @@ public class BinaryWire2Test extends WireTestCommon {
         try (DocumentContext context = wire.readingDocument()) {
             assertTrue(context.isPresent());
             assertTrue(context.isMetaData());
-            Assert.assertEquals(1234567890L, wire.read(() -> "tid").int64());
+            Assert.assertEquals(1234567890L, wire.read("tid").int64());
         }
         try (DocumentContext context = wire.readingDocument()) {
             assertTrue(context.isPresent());
             assertTrue(context.isData());
-            wire.read(() -> "data").typePrefix(this, (o, t) -> assertEquals("!UpdateEvent", t.toString())).marshallable(
-                    m -> m.read(() -> "assetName").object(String.class, "/name", Assert::assertEquals)
-                            .read(() -> "key").object(String.class, "test", Assert::assertEquals)
-                            .read(() -> "oldValue").object(String.class, "error", Assert::assertNull)
-                            .read(() -> "value").object(String.class, "world2", Assert::assertEquals));
+            wire.read("data").typePrefix(this, (o, t) -> assertEquals("!UpdateEvent", t.toString())).marshallable(
+                    m -> m.read("assetName").object(String.class, "/name", Assert::assertEquals)
+                            .read("key").object(String.class, "test", Assert::assertEquals)
+                            .read("oldValue").object(String.class, "error", Assert::assertNull)
+                            .read("value").object(String.class, "world2", Assert::assertEquals));
         }
         try (DocumentContext context = wire.readingDocument()) {
             assertFalse(context.isPresent());
@@ -539,15 +539,15 @@ public class BinaryWire2Test extends WireTestCommon {
         @NotNull Wire wire = createWire();
 
         @NotNull final byte[] expected = {-1, -2, -3, -4, -5, -6, -7};
-        wire.writeDocument(false, wir -> wir.writeEventName(() -> "put")
+        wire.writeDocument(false, wir -> wir.writeEventName("put")
                 .marshallable(w -> w.write("key").text("1")
                         .write("value")
                         .object(expected)));
         System.out.println(wire);
 
-        wire.readDocument(null, wir -> wire.read(() -> "put")
-                .marshallable(w -> w.read(() -> "key").object(Object.class, "1", Assert::assertEquals)
-                        .read(() -> "value").object(Object.class, expected, (e, v) -> {
+        wire.readDocument(null, wir -> wire.read("put")
+                .marshallable(w -> w.read("key").object(Object.class, "1", Assert::assertEquals)
+                        .read("value").object(Object.class, expected, (e, v) -> {
                             Assert.assertArrayEquals(e, (byte[]) v);
                         })));
     }
@@ -613,9 +613,9 @@ public class BinaryWire2Test extends WireTestCommon {
                         "--- !!data #binary\n" +
                         "four: !byte[] \"\\0\\x01\\x02\\x03\\x04\\x05\\x06\\a\\b\\t\\n\\v\\f\\r\\x0E\\x0F\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1A\\e\\x1C\\x1D\\x1E\\x1F \"\n"
                 , Wires.fromSizePrefixedBlobs(wire));
-        wire.readDocument(null, w -> assertArrayEquals(new byte[0], (byte[]) w.read(() -> "nothing").object()));
-        wire.readDocument(null, w -> assertArrayEquals(one, (byte[]) w.read(() -> "one").object()));
-        wire.readDocument(null, w -> assertArrayEquals(thirtytwo, (byte[]) w.read(() -> "four").object()));
+        wire.readDocument(null, w -> assertArrayEquals(new byte[0], (byte[]) w.read("nothing").object()));
+        wire.readDocument(null, w -> assertArrayEquals(one, (byte[]) w.read("one").object()));
+        wire.readDocument(null, w -> assertArrayEquals(thirtytwo, (byte[]) w.read("four").object()));
     }
 
     @Test
@@ -652,7 +652,7 @@ public class BinaryWire2Test extends WireTestCommon {
         wire.write("test").text("Hello World");
 
         @NotNull final BinaryWire wire1 = createWire();
-        wire1.writeDocument(false, (WireOut w) -> w.write(() -> "nested")
+        wire1.writeDocument(false, (WireOut w) -> w.write("nested")
                 .bytesLiteral(wire.bytes()));
 
         assertEquals("--- !!data #binary\n" +
@@ -661,7 +661,7 @@ public class BinaryWire2Test extends WireTestCommon {
                 "}\n", Wires.fromSizePrefixedBlobs(wire1));
 
         wire1.readDocument(null, w -> {
-            @Nullable final BytesStore bytesStore = w.read(() -> "nested")
+            @Nullable final BytesStore bytesStore = w.read("nested")
                     .bytesLiteral();
             assertEquals(wire.bytes(), bytesStore);
         });

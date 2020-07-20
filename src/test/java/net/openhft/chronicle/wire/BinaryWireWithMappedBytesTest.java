@@ -41,10 +41,10 @@ public class BinaryWireWithMappedBytesTest extends WireTestCommon {
         file.delete();
         @NotNull MappedBytes bytes = MappedBytes.mappedBytes(file, 64 << 10);
         Wire wire = WireType.BINARY.apply(bytes);
-        wire.write(() -> "int32").int32forBinding(1)
-                .write(() -> "int32b").int32forBinding(2)
-                .write(() -> "int64").int64forBinding(3)
-                .write(() -> "int128").int128forBinding(4, 5);
+        wire.write("int32").int32forBinding(1)
+                .write("int32b").int32forBinding(2)
+                .write("int64").int64forBinding(3)
+                .write("int128").int128forBinding(4, 5);
         @NotNull IntValue a = wire.newIntReference();
         @NotNull IntValue b = wire.newIntReference();
         @NotNull LongValue c = wire.newLongReference();

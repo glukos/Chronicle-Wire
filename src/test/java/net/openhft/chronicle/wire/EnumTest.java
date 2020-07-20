@@ -42,7 +42,7 @@ public class EnumTest extends WireTestCommon {
             @NotNull TextWire wire2 = TextWire.from(
                     "test: !net.openhft.chronicle.wire.EnumTest$TestEnum {\n" +
                             "}\n");
-            @Nullable Object enumObject = wire2.read(() -> "test")
+            @Nullable Object enumObject = wire2.read("test")
                     .object();
             Assert.assertSame(enumObject, TestEnum.INSTANCE);
         } finally {

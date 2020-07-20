@@ -60,7 +60,7 @@ public class EnumSetMarshallingTest extends WireTestCommon {
 
         @NotNull Wire tw = new BinaryWire(bytes);
         tw.writeDocument(false, w -> {
-            w.write(() -> "key").marshallable(written);
+            w.write("key").marshallable(written);
         });
 
         assertEquals(EMPTY_SET_SERIALISED_FORM, Wires.fromSizePrefixedBlobs(bytes));
@@ -78,7 +78,7 @@ public class EnumSetMarshallingTest extends WireTestCommon {
 
         @NotNull Wire tw = new BinaryWire(bytes);
         tw.writeDocument(false, w -> {
-            w.write(() -> "key").marshallable(written);
+            w.write("key").marshallable(written);
         });
 
         assertEquals(FULL_SET_SERIALISED_FORM, Wires.fromSizePrefixedBlobs(bytes));
@@ -98,7 +98,7 @@ public class EnumSetMarshallingTest extends WireTestCommon {
 
         @NotNull Wire tw = new BinaryWire(bytes);
         tw.writeDocument(false, w -> {
-            w.write(() -> "key").marshallable(written);
+            w.write("key").marshallable(written);
         });
 
         assertEquals(FULL_SET_SERIALISED_FORM, Wires.fromSizePrefixedBlobs(bytes));
@@ -116,7 +116,7 @@ public class EnumSetMarshallingTest extends WireTestCommon {
 
         @NotNull Wire tw = new BinaryWire(bytes);
         tw.writeDocument(false, w -> {
-            w.write(() -> "key").marshallable(written);
+            w.write("key").marshallable(written);
         });
 
         tw.readingDocument().wire().read("key").marshallable(read);

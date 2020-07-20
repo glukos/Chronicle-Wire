@@ -34,15 +34,15 @@ public class OuterClass extends SelfDescribingMarshallable {
 
     @Override
     public void readMarshallable(@NotNull WireIn wire) throws IORuntimeException {
-        wire.read(() -> "text").text(this, (t, v) -> t.text = v)
-                .read(() -> "wireType").object(WireType.class, this, (t, v) -> t.wireType = v)
-                .read(() -> "listA").sequence(this, (t, v) -> {
+        wire.read("text").text(this, (t, v) -> t.text = v)
+                .read("wireType").object(WireType.class, this, (t, v) -> t.wireType = v)
+                .read("listA").sequence(this, (t, v) -> {
             t.clearListA();
             while (v.hasNextSequenceItem())
                 v.marshallable(addListA());
         });
 
-        wire.read(() -> "listB").sequence(this, (t, v) -> {
+        wire.read("listB").sequence(this, (t, v) -> {
             t.clearListB();
             while (v.hasNextSequenceItem())
                 v.marshallable(addListB());
@@ -51,14 +51,14 @@ public class OuterClass extends SelfDescribingMarshallable {
 
     @Override
     public void writeMarshallable(@NotNull WireOut wire) {
-        wire.write(() -> "text").text(text)
-                .write(() -> "wireType").text(wireType.name())
-                .write(() -> "listA").sequence(this, (t, v) -> {
+        wire.write("text").text(text)
+                .write("wireType").text(wireType.name())
+                .write("listA").sequence(this, (t, v) -> {
             for (NestedClass nc : t.getListA()) {
                 v.marshallable(nc);
             }
         })
-                .write(() -> "listB").sequence(this, (t, v) -> {
+                .write("listB").sequence(this, (t, v) -> {
             for (NestedClass nc : t.getListB()) {
                 v.marshallable(nc);
             }

@@ -42,7 +42,7 @@ public class UsingTestMarshallable {
         @NotNull Wire textWire = new TextWire(byteBufferBytes);
         textWire.bytes().readPosition();
 
-        textWire.writeDocument(false, d -> d.write(() -> "any-key").marshallable(testMarshallable));
+        textWire.writeDocument(false, d -> d.write("any-key").marshallable(testMarshallable));
 
         String value = Wires.fromSizePrefixedBlobs(textWire.bytes());
 
@@ -68,9 +68,9 @@ public class UsingTestMarshallable {
         @NotNull MyMarshallable x = new MyMarshallable();
         x.text.append("text");
 
-        wire.write(() -> "key").typedMarshallable(x);
+        wire.write("key").typedMarshallable(x);
 
-        @NotNull final ValueIn read = wire.read(() -> "key");
+        @NotNull final ValueIn read = wire.read("key");
         @Nullable final MyMarshallable result = read.typedMarshallable();
 
         System.out.println(result.toString());
@@ -111,12 +111,12 @@ public class UsingTestMarshallable {
 
         @Override
         public void readMarshallable(@NotNull WireIn wire) {
-            wire.read(() -> "262").text(text);
+            wire.read("262").text(text);
         }
 
         @Override
         public void writeMarshallable(@NotNull WireOut wire) {
-            wire.write(() -> "262").text(text);
+            wire.write("262").text(text);
         }
 
         @NotNull

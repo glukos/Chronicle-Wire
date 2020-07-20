@@ -162,21 +162,21 @@ put: [ 3, bye ]
                         out2.write(relativeUri).text("test")
                                 .write(view).typeLiteral("Map")
                                 .write(types).marshallable(m ->
-                                m.write(() -> "keyType").typeLiteral("Integer")
-                                        .write(() -> "valueType").typeLiteral("String"))));
+                                m.write("keyType").typeLiteral("Integer")
+                                        .write("valueType").typeLiteral("String"))));
         System.out.println(wire);
     }
 
     private void writeMessageTwo(@NotNull Wire wire) {
         wire.writeDocument(true, out ->
-                out.write(() -> "csp").text("//server1/test")
-                        .write(() -> "cid").int64(1));
+                out.write("csp").text("//server1/test")
+                        .write("cid").int64(1));
         @NotNull String[] words = ",hello,world,bye".split(",");
         for (int i = 1; i < words.length; i++) {
             int n = i;
             wire.writeDocument(false, out ->
-                    out.write(() -> "put").marshallable(m -> m.write(() -> "key").int64(n)
-                            .write(() -> "value").text(words[n])));
+                    out.write("put").marshallable(m -> m.write("key").int64(n)
+                            .write("value").text(words[n])));
         }
     }
 

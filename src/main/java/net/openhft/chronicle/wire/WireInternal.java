@@ -219,7 +219,7 @@ public enum WireInternal {
         final Throwable finalThrowable = throwable;
         @NotNull final List<StackTraceElement> stes = new ArrayList<>();
         valueIn.marshallable(m -> {
-            @Nullable final String message = m.read(() -> "message").text();
+            @Nullable final String message = m.read("message").text();
 
             if (message != null) {
                 try {
@@ -228,13 +228,13 @@ public enum WireInternal {
                     throw new AssertionError(e);
                 }
             }
-            m.read(() -> "stackTrace").sequence(stes, (stes0, stackTrace) -> {
+            m.read("stackTrace").sequence(stes, (stes0, stackTrace) -> {
                 while (stackTrace.hasNextSequenceItem()) {
                     stackTrace.marshallable(r -> {
-                        @Nullable final String declaringClass = r.read(() -> "class").text();
-                        @Nullable final String methodName = r.read(() -> "method").text();
-                        @Nullable final String fileName = r.read(() -> "file").text();
-                        final int lineNumber = r.read(() -> "line").int32();
+                        @Nullable final String declaringClass = r.read("class").text();
+                        @Nullable final String methodName = r.read("method").text();
+                        @Nullable final String fileName = r.read("file").text();
+                        final int lineNumber = r.read("line").int32();
 
                         stes0.add(new StackTraceElement(declaringClass, methodName,
                                 fileName, lineNumber));

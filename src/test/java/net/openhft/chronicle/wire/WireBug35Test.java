@@ -19,9 +19,9 @@ public class WireBug35Test extends WireTestCommon {
         final Bytes<ByteBuffer> bytes = Bytes.elasticByteBuffer();
 
         final Wire wire = WireType.TEXT.apply(bytes);
-        wire.write(() -> "seq").sequence(seq -> {
-            seq.marshallable(obj -> obj.write(() -> "key").text("value"));
-            seq.marshallable(obj -> obj.write(() -> "key").text("value"));
+        wire.write("seq").sequence(seq -> {
+            seq.marshallable(obj -> obj.write("key").text("value"));
+            seq.marshallable(obj -> obj.write("key").text("value"));
         });
 
         @NotNull final String text = wire.asText().toString();
@@ -36,9 +36,9 @@ public class WireBug35Test extends WireTestCommon {
     public void objectsInSequenceBinaryWire() {
         final Bytes<ByteBuffer> bytes = Bytes.elasticByteBuffer();
         final Wire wire = WireType.BINARY.apply(bytes);
-        wire.write(() -> "seq").sequence(seq -> {
-            seq.marshallable(obj -> obj.write(() -> "key").text("value"));
-            seq.marshallable(obj -> obj.write(() -> "key").text("value"));
+        wire.write("seq").sequence(seq -> {
+            seq.marshallable(obj -> obj.write("key").text("value"));
+            seq.marshallable(obj -> obj.write("key").text("value"));
         });
 
         @NotNull final String text = wire.asText().toString();

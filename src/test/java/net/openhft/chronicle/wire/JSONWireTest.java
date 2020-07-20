@@ -50,7 +50,7 @@ public class JSONWireTest extends WireTestCommon {
         items.add(new Item("item3", 3235666L, 1.12312));
         items.add(new Item("item4", 4235666L, 1.51231));
 
-        @NotNull WireOut out = wire.writeEventName(() -> "myEvent").list(items, Item.class);
+        @NotNull WireOut out = wire.writeEventName("myEvent").list(items, Item.class);
 
         assertEquals("\"myEvent\":[{\"name\":\"item1\",\"number1\":1235666,\"number2\":1.1231231},\n" +
                 "{\"name\":\"item2\",\"number1\":2235666,\"number2\":1.0987987},\n" +
@@ -152,7 +152,7 @@ public class JSONWireTest extends WireTestCommon {
         w.write("item").marshallable(item1);
 
         @NotNull Item item2 = new Item();
-        w.read(() -> "item").marshallable(item2);
+        w.read("item").marshallable(item2);
 
         assertNull(item2.name);
         assertEquals(item1, item2);
@@ -225,16 +225,16 @@ public class JSONWireTest extends WireTestCommon {
 
         @Override
         public void readMarshallable(@NotNull WireIn wire) throws IORuntimeException {
-            name = wire.read(() -> "name").text();
-            list1 = wire.read(() -> "list1").list(Item.class);
-            list2 = wire.read(() -> "list2").list(Item.class);
+            name = wire.read("name").text();
+            list1 = wire.read("list1").list(Item.class);
+            list2 = wire.read("list2").list(Item.class);
         }
 
         @Override
         public void writeMarshallable(@NotNull WireOut wire) {
-            wire.write(() -> "name").text(name);
-            wire.write(() -> "list1").list(list1, Item.class);
-            wire.write(() -> "list2").list(list2, Item.class);
+            wire.write("name").text(name);
+            wire.write("list1").list(list1, Item.class);
+            wire.write("list2").list(list2, Item.class);
         }
     }
 }

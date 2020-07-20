@@ -82,7 +82,7 @@ Options include:
 * thread-safe operations in text - planned
 
 To support wire format discovery, the first byte should be in the `ASCII` range; adding an `ASCII` whitespace if needed.
-    
+
 == Binary Formats
 
 The binary formats include:
@@ -109,7 +109,7 @@ To support wire format discovery, the first bytes should have the top bit set.
 
 === Simple use case.
 
-First you need to have a buffer to write to.  This can be a `byte[]`, a `ByteBuffer`, off-heap memory, or even an address and length that you have obtained from some other library.
+First you need to have a buffer to write to.This can be a `byte[]`, a `ByteBuffer`, off-heap memory, or even an address and length that you have obtained from some other library.
 
 [source, Java]
 ----
@@ -117,7 +117,7 @@ First you need to have a buffer to write to.  This can be a `byte[]`, a `ByteBuf
 Bytes<ByteBuffer> bytes = Bytes.elasticByteBuffer();
 ----
 
-Now you can choose which format you are using.  As the wire formats are themselves unbuffered, you can use them with the same buffer, but in general using one wire format is easier.
+Now you can choose which format you are using.As the wire formats are themselves unbuffered, you can use them with the same buffer, but in general using one wire format is easier.
 
 [source, Java]
 ----
@@ -135,18 +135,18 @@ Wire wire3 = new RawWire(bytes3);
 
 So now you can write to the wire with a simple document.
 
-[source, Java]
+[source,Java]
 ----
-wire.write(() -> "message").text("Hello World")
-      .write(() -> "number").int64(1234567890L)
-       .write(() -> "code").asEnum(TimeUnit.SECONDS)
-      .write(() -> "price").float64(10.50);
+wire.write("message").text("Hello World")
+      .write("number").int64(1234567890L)
+       .write("code").asEnum(TimeUnit.SECONDS)
+      .write("price").float64(10.50);
 System.out.println(bytes);
 ----
 
 prints
 
-[source, yaml]
+[source,yaml]
 ----
 message: Hello World
 number: 1234567890
@@ -154,13 +154,13 @@ code: SECONDS
 price: 10.5
 ----
 
-[source, Java]
+[source,Java]
 ----
 // the same code as for text wire
-wire2.write(() -> "message").text("Hello World")
-        .write(() -> "number").int64(1234567890L)
-        .write(() -> "code").asEnum(TimeUnit.SECONDS)
-        .write(() -> "price").float64(10.50);
+wire2.write("message").text("Hello World")
+        .write("number").int64(1234567890L)
+        .write("code").asEnum(TimeUnit.SECONDS)
+        .write("price").float64(10.50);
         System.out.println(bytes2.toHexString());
 ----
 
@@ -176,13 +176,13 @@ prints
 Using `RawWire` strips away all the meta data to reduce the size of the message, and improve speed.
 The down-side is that we cannot easily see what the message contains.
 
-[source, Java]
+[source,Java]
 ----
         // the same code as for text wire
-        wire3.write(() -> "message").text("Hello World")
-                .write(() -> "number").int64(1234567890L)
-                .write(() -> "code").asEnum(TimeUnit.SECONDS)
-                .write(() -> "price").float64(10.50);
+        wire3.write("message").text("Hello World")
+                .write("number").int64(1234567890L)
+                .write("code").asEnum(TimeUnit.SECONDS)
+                .write("price").float64(10.50);
         System.out.println(bytes3.toHexString());
 ----
 
@@ -282,7 +282,7 @@ Chronicle Wire offers the ability to bind a reference to a fixed value of a fiel
 ----
 
 Other types are supported; for example, 32-bit integer values, and an array of 64-bit integer values.
-    
+
 == Compression Options
 
 * No compression

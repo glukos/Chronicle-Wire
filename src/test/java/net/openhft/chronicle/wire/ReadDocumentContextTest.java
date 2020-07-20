@@ -52,7 +52,7 @@ public class ReadDocumentContextTest extends WireTestCommon {
             assertTrue(dc.isPresent());
             assertTrue(dc.isNotComplete());
             assertFalse(dc.isMetaData());
-            Assert.assertEquals("someText", wire.read(() -> "key").text());
+            Assert.assertEquals("someText", wire.read("key").text());
         }
 
         wire.writeDocument(false, w -> w.write("key2").text("someText2"));
@@ -61,7 +61,7 @@ public class ReadDocumentContextTest extends WireTestCommon {
             assertTrue(dc.isPresent());
             assertFalse(dc.isNotComplete());
             assertFalse(dc.isMetaData());
-            Assert.assertEquals("someText2", wire.read(() -> "key2").text());
+            Assert.assertEquals("someText2", wire.read("key2").text());
         }
 
         b.releaseLast();
@@ -99,7 +99,7 @@ public class ReadDocumentContextTest extends WireTestCommon {
             assertTrue(dc.isPresent());
             assertFalse(dc.isNotComplete());
             assertFalse(dc.isMetaData());
-            Assert.assertEquals("someText", wire.read(() -> "key").text());
+            Assert.assertEquals("someText", wire.read("key").text());
         }
 
         // and the message after it.
@@ -107,7 +107,7 @@ public class ReadDocumentContextTest extends WireTestCommon {
             assertTrue(dc.isPresent());
             assertFalse(dc.isNotComplete());
             assertFalse(dc.isMetaData());
-            Assert.assertEquals("someText2", wire.read(() -> "key2").text());
+            Assert.assertEquals("someText2", wire.read("key2").text());
         }
         b.releaseLast();
     }
@@ -133,7 +133,7 @@ public class ReadDocumentContextTest extends WireTestCommon {
         try (@NotNull DocumentContext dc = textWire.readingDocument()) {
             assertTrue(dc.isPresent());
             assertFalse(dc.isMetaData());
-            Assert.assertEquals("someText2", textWire.read(() -> "key2").text());
+            Assert.assertEquals("someText2", textWire.read("key2").text());
         }
 
         b.releaseLast();
@@ -154,7 +154,7 @@ public class ReadDocumentContextTest extends WireTestCommon {
         try (@NotNull DocumentContext dc = textWire.readingDocument()) {
             assertTrue(dc.isPresent());
             assertTrue(dc.isMetaData());
-            Assert.assertEquals("someText", textWire.read(() -> "key").text());
+            Assert.assertEquals("someText", textWire.read("key").text());
         }
 
         long limit = b.readLimit();
@@ -173,13 +173,13 @@ public class ReadDocumentContextTest extends WireTestCommon {
         try (@NotNull DocumentContext dc = textWire.readingDocument()) {
             assertTrue(dc.isPresent());
             assertTrue(dc.isMetaData());
-            Assert.assertEquals("someText", textWire.read(() -> "key").text());
+            Assert.assertEquals("someText", textWire.read("key").text());
         }
 
         try (@NotNull DocumentContext dc = textWire.readingDocument()) {
             assertTrue(dc.isPresent());
             assertFalse(dc.isMetaData());
-            Assert.assertEquals("someText2", textWire.read(() -> "key2").text());
+            Assert.assertEquals("someText2", textWire.read("key2").text());
         }
 
         b.releaseLast();
@@ -200,7 +200,7 @@ public class ReadDocumentContextTest extends WireTestCommon {
         try (@NotNull DocumentContext dc = textWire.readingDocument()) {
             assertTrue(dc.isPresent());
             assertTrue(dc.isMetaData());
-            Assert.assertEquals("someText", textWire.read(() -> "key").text());
+            Assert.assertEquals("someText", textWire.read("key").text());
         }
 
         long limit = b.readLimit();
@@ -219,13 +219,13 @@ public class ReadDocumentContextTest extends WireTestCommon {
         try (@NotNull DocumentContext dc = textWire.readingDocument()) {
             assertTrue(dc.isPresent());
             assertTrue(dc.isMetaData());
-            Assert.assertEquals("someText", textWire.read(() -> "key").text());
+            Assert.assertEquals("someText", textWire.read("key").text());
         }
 
         try (@NotNull DocumentContext dc = textWire.readingDocument()) {
             assertTrue(dc.isPresent());
             assertFalse(dc.isMetaData());
-            Assert.assertEquals("someText2", textWire.read(() -> "key2").text());
+            Assert.assertEquals("someText2", textWire.read("key2").text());
         }
 
         b.releaseLast();

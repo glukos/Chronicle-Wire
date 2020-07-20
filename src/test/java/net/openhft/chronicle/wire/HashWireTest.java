@@ -31,13 +31,13 @@ public class HashWireTest extends WireTestCommon {
     @Test
     public void testHash64() {
         long h = HashWire.hash64(wire ->
-                wire.write(() -> "entrySet").sequence(s -> {
+                wire.write("entrySet").sequence(s -> {
                     s.marshallable(m -> m
-                            .write(() -> "key").text("key-1")
-                            .write(() -> "value").text("value-1"));
+                            .write("key").text("key-1")
+                            .write("value").text("value-1"));
                     s.marshallable(m -> m
-                            .write(() -> "key").text("key-2")
-                            .write(() -> "value").text("value-2"));
+                            .write("key").text("key-2")
+                            .write("value").text("value-2"));
                 }));
         assertNotEquals(0, h);
     }

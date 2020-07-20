@@ -26,10 +26,10 @@ Wire wire3 = new RawWire(bytes3);
 ```
 So now you can write to the wire with a simple document.
 ```java
-wire.write(() -> "message").text("Hello World")
-      .write(() -> "number").int64(1234567890L)
-       .write(() -> "code").asEnum(TimeUnit.SECONDS)
-      .write(() -> "price").float64(10.50);
+wire.write("message").text("Hello World")
+      .write("number").int64(1234567890L)
+       .write("code").asEnum(TimeUnit.SECONDS)
+      .write("price").float64(10.50);
 System.out.println(bytes);
 ```
 prints
@@ -42,10 +42,10 @@ price: 10.5
 
 ```java
 // the same code as for text wire
-wire2.write(() -> "message").text("Hello World")
-        .write(() -> "number").int64(1234567890L)
-        .write(() -> "code").asEnum(TimeUnit.SECONDS)
-        .write(() -> "price").float64(10.50);
+wire2.write("message").text("Hello World")
+        .write("number").int64(1234567890L)
+        .write("code").asEnum(TimeUnit.SECONDS)
+        .write("price").float64(10.50);
         System.out.println(bytes2.toHexString());
 
 // to obtain the underlying ByteBuffer to write to a Channel
@@ -67,10 +67,10 @@ Using the RawWire strips away all the meta data to reduce the size of the messag
 The down side is that we cannot easily see what the message contains.
 ```java
         // the same code as for text wire
-        wire3.write(() -> "message").text("Hello World")
-                .write(() -> "number").int64(1234567890L)
-                .write(() -> "code").asEnum(TimeUnit.SECONDS)
-                .write(() -> "price").float64(10.50);
+        wire3.write("message").text("Hello World")
+                .write("number").int64(1234567890L)
+                .write("code").asEnum(TimeUnit.SECONDS)
+                .write("price").float64(10.50);
         System.out.println(bytes3.toHexString());
 ```
 prints in RawWire
@@ -139,11 +139,11 @@ Bytes<ByteBuffer> bytes = Bytes.elasticByteBuffer();
 Wire wire = new TextWire(bytes);
 
 Data data = new Data("Hello World", 1234567890L, TimeUnit.NANOSECONDS, 10.50);
-wire.write(() -> "mydata").marshallable(data);
+wire.write("mydata").marshallable(data);
 System.out.println(bytes);
 
 Data data2= new Data();
-wire.read(() -> "mydata").marshallable(data2);
+wire.read("mydata").marshallable(data2);
 System.out.println(data2);
 
 ```
@@ -165,11 +165,11 @@ To write in binary instead
 Bytes<ByteBuffer> bytes2 = Bytes.elasticByteBuffer();
 Wire wire2 = new BinaryWire(bytes2);
 
-wire2.write(() -> "mydata").marshallable(data);
+wire2.write("mydata").marshallable(data);
 System.out.println(bytes2.toHexString());
 
 Data data3= new Data();
-wire2.read(() -> "mydata").marshallable(data3);
+wire2.read("mydata").marshallable(data3);
 System.out.println(data3);
 ```
 prints
@@ -199,10 +199,10 @@ Wire wire = new TextWire(bytes);
 ClassAliasPool.CLASS_ALIASES.addAlias(Data.class);
 
 Data data = new Data("Hello World", 1234567890L, TimeUnit.NANOSECONDS, 10.50);
-wire.write(() -> "mydata").object(data);
+wire.write("mydata").object(data);
 System.out.println(bytes);
 
-Data data2= wire.read(() -> "mydata").object(Data.class);
+Data data2= wire.read("mydata").object(Data.class);
 System.out.println(data2);
 ```
 prints
@@ -223,10 +223,10 @@ To write in binary instead
 Bytes<ByteBuffer> bytes2 = Bytes.elasticByteBuffer();
 Wire wire2 = new BinaryWire(bytes2);
 
-wire2.write(() -> "mydata").object(data);
+wire2.write("mydata").object(data);
 System.out.println(bytes2.toHexString());
 
-Data data3 = wire2.read(() -> "mydata").object(Data.class);
+Data data3 = wire2.read("mydata").object(Data.class);
 System.out.println(data3);
 ```
 prints
@@ -314,12 +314,12 @@ Data[] data = {
         new Data("G'Day All", 1212121, TimeUnit.MINUTES, 12.34),
         new Data("Howyall", 1234567890L, TimeUnit.SECONDS, 1000)
 };
-wire.writeDocument(false, w -> w.write(() -> "mydata")
+wire.writeDocument(false, w -> w.write("mydata")
         .sequence(v -> Stream.of(data).forEach(v::object)));
 System.out.println(Wires.fromSizePrefixedBlobs(bytes));
 
 List<Data> dataList = new ArrayList<>();
-assertTrue(wire.readDocument(null, w -> w.read(() -> "mydata")
+assertTrue(wire.readDocument(null, w -> w.read("mydata")
 .sequence(v -> { while(v.hasNextSequenceItem()) dataList.add(v.object(Data.class)); })));
 dataList.forEach(System.out::println);
 ```
@@ -358,12 +358,12 @@ To write in binary instead
 Bytes<ByteBuffer> bytes2 = Bytes.elasticByteBuffer();
 Wire wire2 = new BinaryWire(bytes2);
 
-wire2.writeDocument(false, w -> w.write(() -> "mydata")
+wire2.writeDocument(false, w -> w.write("mydata")
         .sequence(v -> Stream.of(data).forEach(v::object)));
 System.out.println(Wires.fromSizePrefixedBlobs(bytes2));
 
 List<Data> dataList2 = new ArrayList<>();
-assertTrue(wire2.readDocument(null, w -> w.read(() -> "mydata")
+assertTrue(wire2.readDocument(null, w -> w.read("mydata")
         .sequence(v -> { while(v.hasNextSequenceItem()) dataList2.add(v.object(Data.class)); })));
 dataList2.forEach(System.out::println);
 ```
@@ -418,17 +418,17 @@ class Data implements Marshallable {
     @Override
     public void readMarshallable(@NotNull WireIn wire) throws IllegalStateException {
         wire.read(()->"message").text(s -> message = s)
-                .read(() -> "number").int64(i -> number = i)
-                .read(() -> "timeUnit").asEnum(TimeUnit.class, e -> timeUnit = e)
-                .read(() -> "price").float64(d -> price = d);
+                .read("number").int64(i -> number = i)
+                .read("timeUnit").asEnum(TimeUnit.class, e -> timeUnit = e)
+                .read("price").float64(d -> price = d);
     }
 
     @Override
     public void writeMarshallable(WireOut wire) {
-        wire.write(() -> "message").text(message)
-                .write(() -> "number").int64(number)
-                .write(() -> "timeUnit").asEnum(timeUnit)
-                .write(() -> "price").float64(price);
+        wire.write("message").text(message)
+                .write("number").int64(number)
+                .write("timeUnit").asEnum(timeUnit)
+                .write("price").float64(price);
     }
 
     @Override

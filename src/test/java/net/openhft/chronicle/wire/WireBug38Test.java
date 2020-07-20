@@ -88,12 +88,12 @@ public class WireBug38Test extends WireTestCommon {
 
         @Override
         public void readMarshallable(@NotNull WireIn wire) throws IORuntimeException {
-            wire.read(() -> "obj").marshallable(obj);
+            wire.read("obj").marshallable(obj);
         }
 
         @Override
         public void writeMarshallable(@NotNull WireOut wire) {
-            wire.write(() -> "obj").marshallable(obj);
+            wire.write("obj").marshallable(obj);
         }
 
         @Override

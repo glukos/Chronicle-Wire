@@ -40,14 +40,14 @@ public class CSVWireTest extends WireTestCommon {
         @NotNull StringBuilder row = new StringBuilder();
         wire.readEventName(row).marshallable(w -> {
             assertEquals("data1", row.toString());
-            wire.read(() -> "heading2").text(this, (o, s) -> assertEquals("data2", s))
-                    .read(() -> "heading3").text(this, (o, s) -> assertEquals("data three", s));
+            wire.read("heading2").text(this, (o, s) -> assertEquals("data2", s))
+                    .read("heading3").text(this, (o, s) -> assertEquals("data three", s));
         });
         assertTrue(wire.hasMore());
         wire.readEventName(row).marshallable(w -> {
             assertEquals("row2", row.toString());
-            wire.read(() -> "heading2").text(this, (o, s) -> assertEquals("row2b", s))
-                    .read(() -> "heading3").text(this, (o, s) -> assertEquals("row2c", s));
+            wire.read("heading2").text(this, (o, s) -> assertEquals("row2b", s))
+                    .read("heading3").text(this, (o, s) -> assertEquals("row2c", s));
         });
         assertFalse(wire.hasMore());
     }
@@ -94,29 +94,29 @@ public class CSVWireTest extends WireTestCommon {
         assertTrue(wire.hasMore());
         wire.readEventName(row).marshallable(w -> {
             assertEquals("III", row.toString());
-            wire.read(() -> "company").text("3i Group", Assert::assertEquals)
-                    .read(() -> "price").float64(this, (o, d) -> assertEquals(479.4, d, 0.0))
-                    .read(() -> "change").float64(this, (o, d) -> assertEquals(12, d, 0.0))
-                    .read(() -> "changePercent").float64(this, (o, d) -> assertEquals(2.44, d, 0.0))
-                    .read(() -> "daysVolume").int64(this, (o, d) -> assertEquals(2387043, d));
+            wire.read("company").text("3i Group", Assert::assertEquals)
+                    .read("price").float64(this, (o, d) -> assertEquals(479.4, d, 0.0))
+                    .read("change").float64(this, (o, d) -> assertEquals(12, d, 0.0))
+                    .read("changePercent").float64(this, (o, d) -> assertEquals(2.44, d, 0.0))
+                    .read("daysVolume").int64(this, (o, d) -> assertEquals(2387043, d));
         });
         assertTrue(wire.hasMore());
         wire.readEventName(row).marshallable(w -> {
             assertEquals("3IN", row.toString());
-            wire.read(() -> "company").text("3i Infrastructure", Assert::assertEquals)
-                    .read(() -> "price").float64(this, (o, d) -> assertEquals(164.7, d, 0.0))
-                    .read(() -> "change").float64(this, (o, d) -> assertEquals(0.1, d, 0.0))
-                    .read(() -> "changePercent").float64(this, (o, d) -> assertEquals(0.06, d, 0.0))
-                    .read(() -> "daysVolume").int64(this, (o, d) -> assertEquals(429433, d));
+            wire.read("company").text("3i Infrastructure", Assert::assertEquals)
+                    .read("price").float64(this, (o, d) -> assertEquals(164.7, d, 0.0))
+                    .read("change").float64(this, (o, d) -> assertEquals(0.1, d, 0.0))
+                    .read("changePercent").float64(this, (o, d) -> assertEquals(0.06, d, 0.0))
+                    .read("daysVolume").int64(this, (o, d) -> assertEquals(429433, d));
         });
         assertTrue(wire.hasMore());
         wire.readEventName(row).marshallable(w -> {
             assertEquals("AA", row.toString());
-            wire.read(() -> "company").text("AA", Assert::assertEquals)
-                    .read(() -> "price").float64(this, (o, d) -> assertEquals(325.9, d, 0.0))
-                    .read(() -> "change").float64(this, (o, d) -> assertEquals(5.7, d, 0.0))
-                    .read(() -> "changePercent").float64(this, (o, d) -> assertEquals(1.72, d, 0.0))
-                    .read(() -> "daysVolume").int64(this, (o, d) -> assertEquals(1469834, d));
+            wire.read("company").text("AA", Assert::assertEquals)
+                    .read("price").float64(this, (o, d) -> assertEquals(325.9, d, 0.0))
+                    .read("change").float64(this, (o, d) -> assertEquals(5.7, d, 0.0))
+                    .read("changePercent").float64(this, (o, d) -> assertEquals(1.72, d, 0.0))
+                    .read("daysVolume").int64(this, (o, d) -> assertEquals(1469834, d));
         });
         assertFalse(wire.hasMore());
     }

@@ -39,7 +39,7 @@ public class TextDocumentTest extends WireTestCommon {
         @NotNull final Header wheader = new Header();
         @NotNull final Header rheader = new Header();
 
-        wire.writeDocument(true, w -> w.write(() -> "header").marshallable(wheader));
+        wire.writeDocument(true, w -> w.write("header").marshallable(wheader));
 
         @NotNull Bytes<?> bytes = wire.bytes();
         String actual = Wires.fromSizePrefixedBlobs(bytes);
@@ -47,7 +47,7 @@ public class TextDocumentTest extends WireTestCommon {
                 "  writeByte: !!atomic {  locked: false, value: 00000000000000000512 },\n" +
                         "  readByte: !!atomic {  locked: false, value: 00000000000000001024 }"));
 
-        wire.readDocument(w -> w.read(() -> "header").marshallable(rheader), null);
+        wire.readDocument(w -> w.read("header").marshallable(rheader), null);
 
         assertEquals(wheader.uuid, rheader.uuid);
         assertEquals(wheader.created, rheader.created);

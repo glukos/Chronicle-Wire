@@ -27,14 +27,14 @@ public class TestMarshallable extends SelfDescribingMarshallable {
 
     @Override
     public void readMarshallable(@NotNull WireIn wire) throws IllegalStateException {
-        wire.read(() -> "name").textTo(name);
-        count = wire.read(() -> "count").int32();
+        wire.read("name").textTo(name);
+        count = wire.read("count").int32();
     }
 
     @Override
     public void writeMarshallable(@NotNull WireOut wire) {
-        wire.write(() -> "name").text(name);
-        wire.write(() -> "count").int32(count);
+        wire.write("name").text(name);
+        wire.write("count").int32(count);
 
     }
 

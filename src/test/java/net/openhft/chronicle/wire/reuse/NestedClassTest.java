@@ -81,10 +81,10 @@ public class NestedClassTest extends WireTestCommon {
     public void testMultipleReads() {
         Bytes bytes = Bytes.elasticByteBuffer();
         Wire wire = wireType.apply(bytes);
-        wire.writeEventName(() -> "test1").marshallable(outerClass1);
+        wire.writeEventName("test1").marshallable(outerClass1);
         if (wireType == WireType.JSON)
             wire.bytes().writeUnsignedByte('\n');
-        wire.writeEventName(() -> "test2").marshallable(outerClass2);
+        wire.writeEventName("test2").marshallable(outerClass2);
 
         System.out.println(bytes.readByte(0) < 0 ? bytes.toHexString() : bytes.toString());
         @NotNull StringBuilder sb = new StringBuilder();
