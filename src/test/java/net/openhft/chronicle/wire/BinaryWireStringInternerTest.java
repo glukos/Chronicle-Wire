@@ -82,7 +82,7 @@ public final class BinaryWireStringInternerTest extends WireTestCommon {
 
         executorService.shutdown();
         assertTrue("jobs did not complete in time", executorService.awaitTermination(15L, TimeUnit.SECONDS));
-        assertEquals(true, capturedExceptions.isEmpty());
+        assertTrue(capturedExceptions.isEmpty());
     }
 
     @Test
@@ -91,13 +91,19 @@ public final class BinaryWireStringInternerTest extends WireTestCommon {
 
         final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-        for (int i = 0; i < (Jvm.isArm() ? 12 : 200); i++) {
-            executorService.submit(new BinaryTextReaderWriter(capturedExceptions::add, () -> BinaryWire.binaryOnly(Bytes.allocateElasticOnHeap(4096))));
+        int tasks = Jvm.isArm() ? 12 : 200;
+        for (int i = 0; i < tasks; i++) {
+            executorService.submit(
+                    new BinaryTextReaderWriter(capturedExceptions::add,
+                            () -> BinaryWire.binaryOnly(
+                                    Bytes.allocateElasticOnHeap(4096))));
         }
 
         executorService.shutdown();
-        assertTrue("jobs did not complete in time", executorService.awaitTermination(5L, TimeUnit.SECONDS));
-        assertEquals(true, capturedExceptions.isEmpty());
+        long timeout = Jvm.isArm() ? 15 : 5;
+        assertTrue("jobs did not complete in time",
+                executorService.awaitTermination(timeout, TimeUnit.SECONDS));
+        assertTrue(capturedExceptions.isEmpty());
     }
 
     @Ignore("used to demonstrate errors that can occur when buffers are shared between threads")
@@ -117,7 +123,7 @@ public final class BinaryWireStringInternerTest extends WireTestCommon {
         executorService.shutdown();
         assertTrue("jobs did not complete in time", executorService.awaitTermination(15L, TimeUnit.SECONDS));
         capturedExceptions.stream().filter(e -> e instanceof BufferUnderflowException).forEach(RuntimeException::printStackTrace);
-        assertEquals(true, capturedExceptions.isEmpty());
+        assertTrue(capturedExceptions.isEmpty());
     }
 
     private static final class BinaryTextReaderWriter implements Runnable {
