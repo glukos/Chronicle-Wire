@@ -3,18 +3,15 @@ package net.openhft.chronicle.wire;
 import net.openhft.chronicle.bytes.Bytes;
 import net.openhft.chronicle.core.Jvm;
 import net.openhft.chronicle.threads.NamedThreadFactory;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -22,10 +19,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public final class BinaryWireStringInternerTest extends WireTestCommon {
-    private static final int DATA_SET_SIZE = 1_000;
-    private static final long SEED_WITHOUT_COLLISIONS = 0x982374EADL;
+    private static final int DATA_SET_SIZE = 2_000;
 
-    private final Random random = new Random(SEED_WITHOUT_COLLISIONS);
     private final String[] testData = new String[DATA_SET_SIZE];
     private final String[] internedStrings = new String[DATA_SET_SIZE];
     @SuppressWarnings("rawtypes")
@@ -45,10 +40,20 @@ public final class BinaryWireStringInternerTest extends WireTestCommon {
         return builder.toString();
     }
 
+    @NotNull
+    public static String generateText(int i, int j) {
+        return "test-" + i + "-" + j;
+    }
+
+    @NotNull
+    public static String generateText(int i) {
+        return "test-" + i / 10 + "-" + i % 10;
+    }
+
     @Before
     public void createTestData() throws Exception {
         for (int i = 0; i < DATA_SET_SIZE; i++) {
-            testData[i] = makeString(random.nextInt(250) + 32, random);
+            testData[i] = generateText(i);
         }
 
         for (int i = 0; i < DATA_SET_SIZE; i++) {
@@ -58,26 +63,28 @@ public final class BinaryWireStringInternerTest extends WireTestCommon {
         wire.clear();
     }
 
-    @Ignore("todo fix see #137")
     @Test
     public void shouldInternExistingStringsAlright() throws Exception {
-        final List<RuntimeException> capturedExceptions = new CopyOnWriteArrayList<>();
+        final List<Throwable> capturedExceptions = new CopyOnWriteArrayList<>();
 
         final ExecutorService executorService = Executors.newFixedThreadPool(
                 Runtime.getRuntime().availableProcessors(),
                 new NamedThreadFactory("test"));
 
-        for (int i = 0; i < (Jvm.isArm() ? 12 : 200); i++) {
-            executorService.submit(new BinaryTextReaderWriter(capturedExceptions::add, () -> BinaryWire.binaryOnly(Bytes.allocateElasticOnHeap(4096))));
+        int tasks = Jvm.isArm() ? 100 : 1000;
+        for (int i = 0; i < tasks; i++) {
+            executorService.submit(new BinaryTextReaderWriter(capturedExceptions::add,
+                    () -> BinaryWire.binaryOnly(Bytes.allocateElasticOnHeap(4096))));
         }
 
-        for (int i = 0; i < 50000; i++) {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        for (int i = 0; i < tasks * 100; i++) {
             wire.clear();
             final int dataPointIndex = random.nextInt(DATA_SET_SIZE);
             wire.getFixedBinaryValueOut(true).text(testData[dataPointIndex]);
 
-            final String inputData = wire.read().text();
-            assertEquals(internedStrings[dataPointIndex], message(i, inputData), inputData);
+            final String inputData = wire.getValueIn().text();
+            assertEquals(message(i, inputData), internedStrings[dataPointIndex], inputData);
         }
 
         executorService.shutdown();
@@ -87,11 +94,13 @@ public final class BinaryWireStringInternerTest extends WireTestCommon {
 
     @Test
     public void multipleThreadsUsingBinaryWiresShouldNotCauseProblems() throws Exception {
-        final List<RuntimeException> capturedExceptions = new CopyOnWriteArrayList<>();
+        final List<Throwable> capturedExceptions = new CopyOnWriteArrayList<>();
 
-        final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        final ExecutorService executorService = Executors.newFixedThreadPool(
+                Runtime.getRuntime().availableProcessors(),
+                new NamedThreadFactory("multipleThreadsUsingBinaryWiresShouldNotCauseProblems"));
 
-        int tasks = Jvm.isArm() ? 12 : 200;
+        int tasks = Jvm.isArm() ? 100 : 1000;
         for (int i = 0; i < tasks; i++) {
             executorService.submit(
                     new BinaryTextReaderWriter(capturedExceptions::add,
@@ -109,50 +118,57 @@ public final class BinaryWireStringInternerTest extends WireTestCommon {
     @Ignore("used to demonstrate errors that can occur when buffers are shared between threads")
     @Test
     public void multipleThreadsSharingBinaryWireShouldCauseProblems() throws Exception {
-        final List<RuntimeException> capturedExceptions = new CopyOnWriteArrayList<>();
+        final List<Throwable> capturedExceptions = new CopyOnWriteArrayList<>();
 
         final ExecutorService executorService = Executors.newFixedThreadPool(
                 Runtime.getRuntime().availableProcessors(),
-                new NamedThreadFactory("test"));
+                new NamedThreadFactory("multipleThreadsSharingBinaryWireShouldCauseProblems"));
 
         final BinaryWire sharedMutableWire = BinaryWire.binaryOnly(Bytes.allocateElasticOnHeap(4096));
-        for (int i = 0; i < 1_000; i++) {
+        for (int i = 0; i < 50; i++) {
             executorService.submit(new BinaryTextReaderWriter(capturedExceptions::add, () -> sharedMutableWire));
+            if (!capturedExceptions.isEmpty()) {
+                break;
+            }
+            Jvm.pause(1);
         }
 
         executorService.shutdown();
         assertTrue("jobs did not complete in time", executorService.awaitTermination(15L, TimeUnit.SECONDS));
-        capturedExceptions.stream().filter(e -> e instanceof BufferUnderflowException).forEach(RuntimeException::printStackTrace);
+        capturedExceptions.stream()
+                .filter(e -> e instanceof BufferUnderflowException)
+                .limit(2)
+                .forEach(Throwable::printStackTrace);
         assertTrue(capturedExceptions.isEmpty());
     }
 
     private static final class BinaryTextReaderWriter implements Runnable {
-        private final Supplier<BinaryWire> binaryWireSupplier;
         private final ThreadLocal<BinaryWire> wire;
-        private final Random random = new Random(System.nanoTime());
-        private final Consumer<RuntimeException> exceptionConsumer;
+        private final Consumer<Throwable> exceptionConsumer;
 
-        private BinaryTextReaderWriter(final Consumer<RuntimeException> exceptionConsumer,
-                                       final Supplier<BinaryWire> binaryWireSupplier) throws IOException {
+        private BinaryTextReaderWriter(final Consumer<Throwable> exceptionConsumer,
+                                       final Supplier<BinaryWire> binaryWireSupplier) {
             this.exceptionConsumer = exceptionConsumer;
-            this.binaryWireSupplier = binaryWireSupplier;
-            wire = ThreadLocal.withInitial(
-                    this.binaryWireSupplier);
+            wire = ThreadLocal.withInitial(binaryWireSupplier);
         }
 
         @Override
         public void run() {
             try {
-                for (int i = 0; i < 2_000; i++) {
-                    wire.get().getFixedBinaryValueOut(true).text(makeString(250, random));
-                }
+                for (int i = 0; i < DATA_SET_SIZE / 10; i++) {
+                    BinaryWire binaryWire = wire.get();
+                    binaryWire.clear();
+                    for (int j = 0; j < 10; j++) {
+                        binaryWire.getFixedBinaryValueOut(true)
+                                .text(generateText(i, j));
 
-                for (int i = 0; i < 2_000; i++) {
-                    if (wire.get().read().text() == null) {
-                        exceptionConsumer.accept(new IllegalStateException("text was null"));
+                        if (binaryWire.read().text() == null) {
+                            exceptionConsumer.accept(new IllegalStateException("text was null"));
+                        }
                     }
                 }
-            } catch (RuntimeException e) {
+            } catch (Throwable e) {
+                e.printStackTrace();
                 exceptionConsumer.accept(e);
             }
         }
