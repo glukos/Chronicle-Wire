@@ -1973,6 +1973,15 @@ public class YamlWireTest extends WireTestCommon {
         Assert.assertEquals(d2, d, 0);
     }
 
+
+    @Test
+    public void testQuotedSequence() {
+        YamlWire from = YamlWire.from("[a,b,c]");
+        List object = from.getValueIn()
+                .object(List.class);
+        assertEquals(Arrays.asList("a", "b", "c"), object);
+    }
+
     enum BWKey implements WireKey {
         field1, field2, field3
     }
