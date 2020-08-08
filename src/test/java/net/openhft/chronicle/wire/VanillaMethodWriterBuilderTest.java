@@ -39,20 +39,16 @@ public class VanillaMethodWriterBuilderTest extends WireTestCommon {
         return tests;
     }
 
-    volatile AssertionError error = null;
-
-    private void update(String name1, Object s) {
+    private static void update(String name1, Object s) {
         if (!(s instanceof MyDto))
             return;
         MyDto dto1 = (MyDto) s;
-        if (!"some text".equals(dto1.message))
-            throw (error = new AssertionError());
+        assertEquals("some text", dto1.message);
         dto1.message = "hello world";
     }
 
-    private void check(MyDto dto) {
-        if (!"hello world".equals(dto.message))
-            throw (error = new AssertionError());
+    private static void check(MyDto dto) {
+        assertEquals("hello world", dto.message);
     }
 
     public static class MyDto extends SelfDescribingMarshallable {
@@ -73,14 +69,11 @@ public class VanillaMethodWriterBuilderTest extends WireTestCommon {
         try {
             Wire w = WireType.BINARY.apply(t);
             w.methodWriterBuilder(MyEvent.class)
-                    .updateInterceptor(this::update)
+                    .updateInterceptor(VanillaMethodWriterBuilderTest::update)
                     .build()
                     .print(new MyDto("some text"));
-            w.methodReader((MyEvent) this::check)
+            w.methodReader((MyEvent) VanillaMethodWriterBuilderTest::check)
                     .readOne();
-
-            if (error != null)
-                throw error;
         } finally {
             t.releaseLast();
         }
